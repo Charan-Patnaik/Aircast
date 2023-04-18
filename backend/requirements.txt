@@ -1,0 +1,16 @@
+python-dotenv==0.21.1
+uvicorn
+requests
+SQLAlchemy
+passlib==1.7.4
+fastapi==0.92.0
+bcrypt
+mysql-connector-python
+sqlalchemy-utils
+pydantic
+jose
+openai
+pydantic[email]
+python-jose[cryptography]
+python-multipart
+boto3==1.26.65
