@@ -9,6 +9,17 @@ from sqlalchemy import or_
 
 
 def create(request: User, db: Session):
+    """
+    Create a new user in the database if the email or username provided does not already exist.
+
+    Args:
+    - request (User): User object containing the username, email, and password for the new user.
+    - db (Session): Database session object.
+
+    Returns:
+    - JSONResponse: A JSON response containing a success message and status code 201 if the user is created successfully, otherwise a JSON response with a conflict message and status code 409.
+    """
+    
     try:
         user = db.query(UserModel).filter(or_(UserModel.email == request.email, UserModel.username == request.username)).first()
 
@@ -35,6 +46,18 @@ def create(request: User, db: Session):
     
 
 def find_user(username: str, password: str, db: Session):
+    """
+    Find a user with the given username and verify the provided password matches the hashed password in the database.
+
+    Args:
+    - username (str): Username of the user to search for.
+    - password (str): Password provided by the user to verify.
+    - db (Session): Database session object.
+
+    Returns:
+    - LoginResponse: A LoginResponse object containing the username, email, access token, and token type if the user is found and the password is correct. Otherwise, returns a JSON response with an error message and status code 404 if the user is not found, or a JSON response with an error message and status code 401 if the password is incorrect.
+    """
+    
     user = db.query(UserModel).filter(UserModel.username == username).first()
     
     if not user:
