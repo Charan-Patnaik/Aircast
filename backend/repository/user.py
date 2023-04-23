@@ -6,6 +6,7 @@ from fastapi import status
 from fastapi.responses import JSONResponse
 from schemas.Responses import response
 from sqlalchemy import or_
+import uuid
 
 
 def create(request: User, db: Session):
@@ -27,7 +28,7 @@ def create(request: User, db: Session):
             return response.conflict(f"User with the email '{request.email}' or username '{request.username}' already exists!")
 
 
-        new_user = UserModel(username=request.username, email=request.email, password= hashing.Hash().get_hashed_password(request.password))
+        new_user = UserModel(username=request.username, email=request.email, password= hashing.Hash().get_hashed_password(request.password), planId = request.planId, apiKey = str(uuid.uuid4()))
         db.add(new_user)
         db.commit()
         db.refresh(new_user)

@@ -42,3 +42,22 @@ def verify_token(token:str, credentials_exception):
         # Raise an exception if the token is invalid
         raise credentials_exception
     
+
+
+def verify_token_v2(token:str):
+    try:
+        # Decode the JWT token with the secret key and algorithm from environment variables
+        payload = jwt.decode(token,  os.environ.get('SECRET_KEY'), algorithms=os.environ.get('ALGORITHM'))
+
+        # Get the email from the payload
+        email: str = payload.get("email")
+
+        # Get the token scopes and data        
+        token_scopes = payload.get("scopes", [])
+        token_data = TokenData(id = payload.get("id"), email=email)
+        return token_data
+    except Exception as e:
+        # Raise an exception if the token is invalid
+        print(e)
+        return None
+    
