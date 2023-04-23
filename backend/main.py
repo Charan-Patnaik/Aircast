@@ -7,9 +7,12 @@ import repository.service_plans as servicePlans
 from schemas.User import User
 from models.User import Role
 from pydantic import BaseModel, Field, EmailStr, validator
+from repository import stations, zipcode
+import pandas as pd
 
 app =  FastAPI()
 db = SessionLocal()
+
 
 
 # create tables if not exist
@@ -20,6 +23,34 @@ def init_db():
     servicePlans.create(3, 'Platinum', 20, db= db)
     UserRepository.create(User(username='damg7245', email=EmailStr('rishab1300@gmail.com'), password='spring2023', planId=2, userType= Role.User), db= db)
     UserRepository.create(User(username='admin', email=EmailStr('mail@heyitsrj.com'), password='spring2023', planId=1, userType = Role.Admin), db= db)
+
+    df = pd.read_csv('station_with_params.csv')
+    print(df.shape)
+
+    for index, row in df.iterrows():
+        print(row)
+
+        stations.create(
+            aquid=row['AQSID'],
+            sitename=row['SiteName'],
+            latitude=row['Latitude'],
+            longitude=row['Longitude'],
+            county=row['CountyName'],
+            parameter=row['parameter name'],
+            db= db
+        )
+
+    df = pd.read_csv('zip_with_lat.csv', dtype={'ZIP': str})
+    # print(df)
+    for index, row in df.iterrows():
+        # print(row)
+
+        zipcode.create(
+            zipcode=str(row['ZIP']),
+            latitude=row['LAT'],
+            longitude=row['LNG'],
+            db= db
+        )
 
     print("Initialized the db")
 
