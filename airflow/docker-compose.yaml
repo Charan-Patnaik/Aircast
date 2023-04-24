@@ -74,14 +74,19 @@ x-airflow-common:
     AIRFLOW__CORE__DAGBAG_IMPORT_TIMEOUT: 300
     # WARNING: Use _PIP_ADDITIONAL_REQUIREMENTS option ONLY for a quick checks
     # for other purpose (development, test and especially production usage) build/extend Airflow image.
-    _PIP_ADDITIONAL_REQUIREMENTS: ${_PIP_ADDITIONAL_REQUIREMENTS:- pandas statsmodels scikit-learn}
+    _PIP_ADDITIONAL_REQUIREMENTS: ${_PIP_ADDITIONAL_REQUIREMENTS:- pandas statsmodels scikit-learn SQLAlchemy python-dotenv pymysql}
     # AWS_ACCESS_KEY: ${AWS_ACCESS_KEY}
     # AWS_SECRET_KEY: ${AWS_SECRET_KEY}
     # S3_BUCKET_NAME: ${S3_BUCKET_NAME}
+    SQL_DB_PASSWORD: ${SQL_DB_PASSWORD}
+    SQL_DB_NAME: ${SQL_DB_NAME}
+    SQL_DB_HOST: ${SQL_DB_HOST}
+    SQL_DB_USER: ${SQL_DB_USER}
   volumes:
     - ${AIRFLOW_PROJ_DIR:-.}/dags:/opt/airflow/dags
     - ${AIRFLOW_PROJ_DIR:-.}/logs:/opt/airflow/logs
     - ${AIRFLOW_PROJ_DIR:-.}/plugins:/opt/airflow/plugins
+    - ${AIRFLOW_PROJ_DIR:-.}/common_package:/opt/airflow/common_package:rw
     # - ${AIRFLOW_PROJ_DIR:-.}/common_package:/opt/airflow/common_package:rw
   user: "${AIRFLOW_UID:-50000}:0"
   depends_on:
@@ -142,7 +147,7 @@ services:
     healthcheck:
       test: ["CMD", "curl", "--fail", "http://localhost:8974/health"]
       interval: 30s
-      timeout: 10s
+      timeout: 20s
       retries: 5
       start_period: 30s
     restart: always
