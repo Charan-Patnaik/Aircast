@@ -4,6 +4,7 @@ from sqlalchemy.orm import Session
 from config import db
 from repository.user import create, find_user
 from fastapi.security import OAuth2PasswordRequestForm
+from schemas.Responses import response
 
 router = APIRouter(
     prefix='/user',
@@ -25,6 +26,9 @@ def sign_up_user(request: User, db: Session = Depends(get_db)):
     Returns:
         dict: A dictionary containing the newly created user account.
     """
+    if request.planId not in [1, 2, 3]:
+        return response.bad_request(f"Please sepcify plan id")
+    
 
     result = create(request = request, db = db)
     return result
