@@ -5,8 +5,5 @@ __pycache__
 aircast.egg-info
 ML/data/*
 ML/site_to_parameter.csv
-<<<<<<< HEAD
 ML/check.csv
-=======
-ML/check.csv
->>>>>>> 01d64f3 (Generate Pickle file python script done)
+aircast.egg-info
