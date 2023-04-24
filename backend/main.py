@@ -25,32 +25,11 @@ def init_db():
     UserRepository.create(User(username='admin', email=EmailStr('mail@heyitsrj.com'), password='spring2023', planId=1, userType = Role.Admin), db= db)
 
     df = pd.read_csv('station_with_params.csv')
-    print(df.shape)
-
-    for index, row in df.iterrows():
-        print(row)
-
-        stations.create(
-            aquid=row['AQSID'],
-            sitename=row['SiteName'],
-            latitude=row['Latitude'],
-            longitude=row['Longitude'],
-            county=row['CountyName'],
-            parameter=row['parameter name'],
-            db= db
-        )
+    stations.create(df, db= db)
 
     df = pd.read_csv('zip_with_lat.csv', dtype={'ZIP': str})
-    # print(df)
-    for index, row in df.iterrows():
-        # print(row)
+    zipcode.create(df, db= db)
 
-        zipcode.create(
-            zipcode=str(row['ZIP']),
-            latitude=row['LAT'],
-            longitude=row['LNG'],
-            db= db
-        )
 
     print("Initialized the db")
 
