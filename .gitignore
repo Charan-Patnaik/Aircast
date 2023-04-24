@@ -3,3 +3,4 @@
 __pycache__
 .DS_Store
 ML/data/*
+ML/site_to_parameter.csv
