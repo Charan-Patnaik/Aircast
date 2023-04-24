@@ -10,6 +10,9 @@ from datetime import datetime, timedelta
 import os
 import urllib.request
 from datetime import datetime
+from airflow.models import data_extraction as de
+# from airflow.models import ARIMA as arima_model
+from airflow.models import generate_pickle_files as pickle_gen
 
 #%%
 # my_arima = ARIMA()
@@ -39,16 +42,14 @@ with dag:
         dag=dag,
     )
 
-
-
-    # arima_data_modeling = PythonOperator(
-    #     task_id='arima_data_modeling',
-    #     python_callable= arima_model.arima_execution,
-    #     provide_context=True,
-    #     do_xcom_push=True,
-    #     dag=dag,
-    # )
+    lstm_data_modeling = PythonOperator(
+        task_id='lstm_data_modeling',
+        python_callable= pickle_gen.generating_pickle_files_all_sites,
+        provide_context=True,
+        do_xcom_push=True,
+        dag=dag,
+    )
 
     # Flow
-    air_data_extraction_daily
+    air_data_extraction_daily >> lstm_data_modeling
 
