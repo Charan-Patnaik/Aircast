@@ -17,3 +17,5 @@ ORDER BY 6371 * ACOS(COS(RADIANS(42.324029)) * COS(RADIANS(latitude)) * COS(RADI
 
 
 SELECT * FROM Zipcode WHERE zipcode='02119';
+
+DROP TABLE StationsData;
