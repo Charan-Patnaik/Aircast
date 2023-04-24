@@ -1,10 +1,12 @@
+#%%
 import mysql.connector
 import os
 from dotenv import load_dotenv
-import os
+import pandas as pd
 
 load_dotenv()
 
+#%%
 class SQLDatabase:
     def __init__(self):
         self.host = os.environ.get('SQL_HOSTNAME')
@@ -13,6 +15,7 @@ class SQLDatabase:
         self.database = 'aircast'
         self.connection = None
         self.cursor = None
+        print(self.host, self.user,  self.password, self.database)
 
     def connect(self):
         try:
@@ -42,6 +45,17 @@ class SQLDatabase:
         except mysql.connector.Error as error:
             print(f"Failed to execute query: {error}")
 
+    def load_data_from_csv_into_db(self, df, table_name):
+        df.to_sql(name=table_name, con=self.connection, if_exists='append', index=False)
 
+
+#%%
 instancesql = SQLDatabase()
 instancesql.connect()
+#%%
+table_name = 'StationsData'
+csv_file_path = '/Users/varshahindupur/Desktop/GitHub/Aircast/airflow/models/data/AirQualityData_Modified.csv'
+# write the DataFrame to the MySQL database using the to_sql() method
+df = pd.read_csv(csv_file_path, sep=',')
+instancesql.load_data_from_csv_into_db(df, table_name)
+instancesql.disconnect()

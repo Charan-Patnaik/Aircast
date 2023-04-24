@@ -11,6 +11,7 @@ def read_csv_file(filename):
     df = pd.read_csv(filename, sep='|')
     return df
 
+#%%
 def get_zero_appended(value: int) -> str:
     if value < 10:
         return f'0{value}'
@@ -44,10 +45,10 @@ def combine_data(file_dat, csv_file):
     
 #%%
 def datetime_if_exists(given_date_str):
-    filename = 'AirQualityData.csv'
+    filename = '/Users/varshahindupur/Desktop/GitHub/Aircast/airflow/models/data/AirQualityData.csv'
     df = read_csv_file(filename)
     
-    if given_date_str in '20230422':
+    if given_date_str in '20230423':
         return True
     return False
 
@@ -56,8 +57,45 @@ def data_extraction_daily():
     today = datetime.today() # get the current date and time as a datetime object
     one_day_ago = today - timedelta(days=1) # subtract one day from the current date
     formatted_date = one_day_ago.strftime('%Y%m%d') # format the date as a string in the desired format
-    
+    filename = ''
+    csv_file = '/Users/varshahindupur/Desktop/GitHub/Aircast/airflow/models/data/AirQualityData.csv'
+
     if not datetime_if_exists(formatted_date):
         combine_data(filename, csv_file)
     else:
         filename = extract_data(formatted_date)
+
+#%%
+def data_segregation(filename):
+    #%%
+    # read file
+    filename = '/Users/varshahindupur/Desktop/GitHub/Aircast/airflow/models/data/AirQualityData.csv'
+    df =  pd.read_csv(filename, sep=',')
+    df.head(2)
+    #%%
+    # Convert date and hour columns to datetime and combine them
+    df['datetime'] = pd.to_datetime(df['date'] + ' ' + df['hour'], format='%m/%d/%y %H:%M')
+    df.head(2)
+    #%%
+    # AQSID, aquid, datetime, ozone, no, no2, co, pm2_5, pm10
+    pivot_df = df.pivot_table(index=['AQSID', 'datetime'], columns='parameter name', values='value')
+    pivot_df = pivot_df.reset_index()
+    # Rename the columns to match the desired output format
+    pivot_df.columns = ['aquid', 'collection_timestamp', 'AG', 'AL', 'AS', 'AT', 'CH', 'co', 'CR', 'CU', 'FE', 'HG', 'K', 'MN', 'NA', 'NI', 'no', 'no2', 'ozone', 'P', 'PB', 'pm10', 'pm2_5', 'SB', 'ZN']
+    # Sort the columns in the desired order
+    pivot_df = pivot_df[['aquid', 'collection_timestamp', 'ozone', 'no', 'no2', 'co', 'pm2_5', 'pm10']]
+    pivot_df = pivot_df.sort_values(by='collection_timestamp', ascending=False)
+    pivot_df.head(15)
+    #%%
+    # replace NaN values with NULL
+    pivot_df = pivot_df.fillna('NULL')
+    print(pivot_df)
+    #%%
+    pivot_df.to_csv('/Users/varshahindupur/Desktop/GitHub/Aircast/airflow/models/data/AirQualityData_Modified.csv', sep=',', index=False)
+
+
+#%%
+data_extraction_daily()
+# %%
+filename = '/Users/varshahindupur/Desktop/GitHub/Aircast/airflow/models/data/AirQualityData.csv'
+data_segregation(filename)
