@@ -5,11 +5,7 @@ from airflow.operators.python import PythonOperator
 from airflow.utils.dates import days_ago
 from airflow.models.param import Param
 from datetime import timedelta
-import pandas as pd
 from datetime import datetime, timedelta
-import os
-import urllib.request
-from datetime import datetime
 
 #%%
 # my_arima = ARIMA()
@@ -39,6 +35,14 @@ with dag:
         dag=dag,
     )
 
+    air_data_extraction_two_daily = PythonOperator(
+        task_id='air_data_extraction_two_daily',
+        python_callable= de.data_extraction_two_days,
+        provide_context=True,
+        do_xcom_push=True,
+        dag=dag,
+    )
+
 
 
     # arima_data_modeling = PythonOperator(
@@ -50,5 +54,5 @@ with dag:
     # )
 
     # Flow
-    air_data_extraction_daily
+    air_data_extraction_daily >> air_data_extraction_two_daily
 

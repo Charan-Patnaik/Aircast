@@ -32,8 +32,8 @@ def _get_zero_appended(value: int) -> str:
 def _download_file(url, directory, filename):
     urllib.request.urlretrieve(url, os.path.join(directory, filename))
 
-def _download_files_for_day(date: str):
 
+def _initialize_directory():
     if not os.path.exists('data'):
         os.makedirs('data')
         os.makedirs(directory_with_raw_files)
@@ -47,6 +47,8 @@ def _download_files_for_day(date: str):
         file_path = os.path.join(directory_with_raw_files, file_name)
         os.remove(file_path)
 
+
+def _download_files_for_day(date: str):
     files_downloaded = []
 
     year = date[:4]
@@ -109,9 +111,7 @@ def _build_combine_dataframe():
 
     json_list = new_table_with_column.to_dict(orient='records')
     print("cobine json data")
-    print(json_list)
-
-    _insert_json_in_table(json_data= json_list)
+    return json_list
 
 
 def _insert_json_in_table(json_data):
@@ -165,6 +165,40 @@ def _insert_json_in_table(json_data):
 
     conn.close()
 
+def _insert_two_days_json_in_table(json_data):
+    # Define database connection details
+    engine = create_engine(SQLALCHEMY_DATABASE_URL)
+
+
+    metadata = MetaData()
+    metadata.bind = engine
+    # Name of the table to insert data into
+        
+    my_table_daily = Table('StationsDataDaily', metadata,
+                 Column('id', Integer, primary_key=True, index=True, autoincrement=True),
+                 Column('collection_timestamp', DateTime),
+                Column('aquid', String(255), unique=False),
+                Column('ozone', String),
+                Column('so2', String),
+                Column('no2', String),
+                Column('co', String),
+                Column('pm2_5', String),
+                Column('pm10', String),
+                 )
+    
+    conn = engine.connect()
+
+    # execute the SQL query to truncate a table
+    truncate_query = text("TRUNCATE TABLE StationsDataDaily")
+    conn.execution_options(autocommit=True).execute(truncate_query)
+    print("data truncated in SQL Successfully")
+    
+
+    conn.execute(my_table_daily.insert(), json_data)
+    print("daily data inserted in SQL Successfully")
+
+    conn.close()
+
 
 #%%
 def data_extraction_daily():
@@ -174,7 +208,27 @@ def data_extraction_daily():
     
     print(formatted_date)
 
+    _initialize_directory()
     _download_files_for_day(formatted_date)
-    _build_combine_dataframe()
+    result_json = _build_combine_dataframe()
+    _insert_json_in_table(result_json)
+
+
+def data_extraction_two_days():
+    today = datetime.today() # get the current date and time as a datetime object
+    one_day_ago = today - timedelta(days=1) # subtract one day from the current date
+    two_day_ago = today - timedelta(days=2) # subtract one day from the current date
+    formatted_date = one_day_ago.strftime('%Y%m%d')
+    formatted_two_date = two_day_ago.strftime('%Y%m%d')
+    
+    print(formatted_date)
+
+    _initialize_directory()
+    _download_files_for_day(formatted_date)
+    _download_files_for_day(formatted_two_date)
+    result_json = _build_combine_dataframe()
+    _insert_two_days_json_in_table(result_json)
+
+
 
 
