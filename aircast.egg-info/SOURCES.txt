@@ -1,6 +1,0 @@
-README.md
-setup.py
-aircast.egg-info/PKG-INFO
-aircast.egg-info/SOURCES.txt
-aircast.egg-info/dependency_links.txt
-aircast.egg-info/top_level.txt
