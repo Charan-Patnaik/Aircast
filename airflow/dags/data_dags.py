@@ -5,7 +5,6 @@ from airflow.operators.python import PythonOperator
 from airflow.utils.dates import days_ago
 from airflow.models.param import Param
 from datetime import timedelta
-import pandas as pd
 from datetime import datetime, timedelta
 import os
 import urllib.request
@@ -45,11 +44,31 @@ with dag:
     lstm_data_modeling = PythonOperator(
         task_id='lstm_data_modeling',
         python_callable= pickle_gen.generating_pickle_files_all_sites,
+        
+    air_data_extraction_two_daily = PythonOperator(
+        task_id='air_data_extraction_two_daily',
+        python_callable= de.data_extraction_two_days,
+
         provide_context=True,
         do_xcom_push=True,
         dag=dag,
     )
 
+
     # Flow
     air_data_extraction_daily >> lstm_data_modeling
+
+
+
+    # arima_data_modeling = PythonOperator(
+    #     task_id='arima_data_modeling',
+    #     python_callable= arima_model.arima_execution,
+    #     provide_context=True,
+    #     do_xcom_push=True,
+    #     dag=dag,
+    # )
+
+    # Flow
+    air_data_extraction_daily >> air_data_extraction_two_daily
+
 
