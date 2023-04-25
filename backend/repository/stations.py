@@ -1,6 +1,7 @@
 from sqlalchemy.orm import Session
 from models.Stations import StationsModel
 from models.StationsData import StationsDataModel
+from models.StationsDataDaily import StationsDataDailyModel
 import pandas as pd
 
 def create(stations, db: Session):
