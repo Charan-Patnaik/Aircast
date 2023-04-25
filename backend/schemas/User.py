@@ -45,3 +45,4 @@ class TokenData(BaseModel):
     id: int
     email: str
     username: Union[str, None] = None
+    userType: int = 2
