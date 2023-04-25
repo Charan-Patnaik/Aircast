@@ -20,3 +20,13 @@ class StationsModel(Base):
     #         "id": str(self.id),
     #         "username": str(self.username)
     #     }
+
+    def to_json_for_retrieving_stations_data(self):
+        return {
+            'aquid': str(self.aquid),
+            'sitename' : str(self.sitename),
+            'latitude' : str(self.latitude),
+            'longitude' : str(self.longitude),
+            'countyName' : str(self.countyName),
+            'parameter_list' : str(self.parameter_list)
+        }

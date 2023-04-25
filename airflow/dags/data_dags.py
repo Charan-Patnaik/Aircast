@@ -6,6 +6,12 @@ from airflow.utils.dates import days_ago
 from airflow.models.param import Param
 from datetime import timedelta
 from datetime import datetime, timedelta
+import os
+import urllib.request
+from datetime import datetime
+from airflow.models import data_extraction as de
+# from airflow.models import ARIMA as arima_model
+from airflow.models import generate_pickle_files as pickle_gen
 
 #%%
 # my_arima = ARIMA()
@@ -35,13 +41,22 @@ with dag:
         dag=dag,
     )
 
+    lstm_data_modeling = PythonOperator(
+        task_id='lstm_data_modeling',
+        python_callable= pickle_gen.generating_pickle_files_all_sites,
+        
     air_data_extraction_two_daily = PythonOperator(
         task_id='air_data_extraction_two_daily',
         python_callable= de.data_extraction_two_days,
+
         provide_context=True,
         do_xcom_push=True,
         dag=dag,
     )
+
+
+    # Flow
+    air_data_extraction_daily >> lstm_data_modeling
 
 
 
@@ -55,4 +70,5 @@ with dag:
 
     # Flow
     air_data_extraction_daily >> air_data_extraction_two_daily
+
 
