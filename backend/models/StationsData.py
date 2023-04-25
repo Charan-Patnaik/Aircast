@@ -9,12 +9,12 @@ class StationsDataModel(Base):
     id = Column(Integer, primary_key=True, index=True, autoincrement=True)
     aquid = Column(String(255), unique=False)
     collection_timestamp = Column(DateTime, default= datetime.datetime.now)
-    ozone = Column(Float)
-    no = Column(Float)
-    no2 = Column(Float)
-    co = Column(Float)
-    pm2_5 = Column(Float)
-    pm10 = Column(Float)
+    ozone = Column(String(10), nullable= True, default=None)
+    so2 = Column(String(10), nullable= True, default=None)
+    no2 = Column(String(10), nullable= True, default=None)
+    co = Column(String(10), nullable= True, default=None)
+    pm2_5 = Column(String(10), nullable= True, default=None)
+    pm10 = Column(String(10), nullable= True, default=None)
 
 
 

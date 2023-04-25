@@ -2,6 +2,7 @@
 .env
 __pycache__
 .DS_Store
+aircast.egg-info
 ML/data/*
 ML/site_to_parameter.csv
 ML/check.csv

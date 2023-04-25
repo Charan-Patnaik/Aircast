@@ -3,6 +3,7 @@ import mysql.connector
 import os
 from dotenv import load_dotenv
 import pandas as pd
+from sqlalchemy import create_engine
 
 load_dotenv()
 
@@ -45,8 +46,27 @@ class SQLDatabase:
         except mysql.connector.Error as error:
             print(f"Failed to execute query: {error}")
 
-    def load_data_from_csv_into_db(self, df, table_name):
-        df.to_sql(name=table_name, con=self.connection, if_exists='append', index=False)
+    def load_data_from_csv_into_db(self, df, table_name, engine):
+        # read in the CSV file as a DataFrame
+        df = pd.read_csv('/Users/varshahindupur/Desktop/GitHub/Aircast/airflow/models/data/AirQualityData_Modified.csv')
+
+        # select the columns you want to keep
+        df = df[['aquid', 'collection_timestamp', 'ozone', 'no', 'no2', 'co', 'pm2_5', 'pm10']]
+
+        # rename the columns to match the requested output format
+        # df = df.rename(columns={'collection_timestamp': 'datetime'})
+
+        # print the formatted DataFrame
+        print(df.head(3))
+
+        # df.to_sql(name=table_name, con=engine if_exists='append', index=False)
+        df.to_sql(name=table_name, con=engine, if_exists='append', index=False)
+
+    def connect_sqlalchemy_engine(self):
+        # Create the SQLAlchemy engine
+        engine = create_engine(f"mysql+pymysql://{self.user}:{self.password}@{self.host}/aircast")
+        print(str(engine))
+        return engine
 
 
 #%%
@@ -57,5 +77,6 @@ table_name = 'StationsData'
 csv_file_path = '/Users/varshahindupur/Desktop/GitHub/Aircast/airflow/models/data/AirQualityData_Modified.csv'
 # write the DataFrame to the MySQL database using the to_sql() method
 df = pd.read_csv(csv_file_path, sep=',')
-instancesql.load_data_from_csv_into_db(df, table_name)
+# instancesql.load_data_from_csv_into_db(df, table_name)
+
 instancesql.disconnect()
