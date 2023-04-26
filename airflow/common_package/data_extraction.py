@@ -218,17 +218,18 @@ def data_extraction_two_days():
     today = datetime.today() # get the current date and time as a datetime object
     one_day_ago = today - timedelta(days=1) # subtract one day from the current date
     two_day_ago = today - timedelta(days=2) # subtract one day from the current date
+    three_day_ago = today - timedelta(days=3) # subtract one day from the current date
     formatted_date = one_day_ago.strftime('%Y%m%d')
     formatted_two_date = two_day_ago.strftime('%Y%m%d')
+    formatted_three_date = three_day_ago.strftime('%Y%m%d')
     
     print(formatted_date)
 
     _initialize_directory()
     _download_files_for_day(formatted_date)
     _download_files_for_day(formatted_two_date)
+    _download_files_for_day(formatted_three_date)
     result_json = _build_combine_dataframe()
     _insert_two_days_json_in_table(result_json)
-
-
 
 
