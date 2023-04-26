@@ -289,8 +289,6 @@ def get_all_nearest_sitenames(zipcode, db: Session):
             "station": key,
             "pollutant": value
         })
-    # d['value'] = elements[0]
-    # d['value'] = aqsid_output
 
     return {
         "success": True,
