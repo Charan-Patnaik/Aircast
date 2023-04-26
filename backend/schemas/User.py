@@ -14,6 +14,8 @@ class LoginResponse(BaseModel):
     email: str
     access_token: str
     token_type: str = "bearer"
+    user_type: int = 2
+
     class Config():
         orm_mode = True
 
@@ -32,7 +34,6 @@ class User(BaseModel):
         default=1,
         title="Please enter the plan ID (Free - 1, Gold - 2, Platinum - 3)"
         )
-    userType: Optional[Role]
 
     @validator("username", "email", pre=True)
     def lowercase_strings(cls, value):
