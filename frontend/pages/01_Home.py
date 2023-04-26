@@ -27,7 +27,6 @@ st.write("The elements for the zipcode you entered")
 ##----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 st.button("Upgrade Subscription")
 
-
 # Create two columns with the same width
 left_column, right_column = st.columns(2)
 # Add content to the left column
@@ -76,8 +75,6 @@ if len(db_elements) > 1:
     fig = go.Figure([go.Bar(x=list(combined_dict.keys()), y=list(combined_dict.values()))])
     fig.update_layout(title="Random Values for All Elements", xaxis_title="Element", yaxis_title="Value")
     st.plotly_chart(fig)
-
-
 
     fig = go.Figure([go.Scatter(x=list(combined_dict.keys()), y=list(combined_dict.values()), mode="markers")])
     fig.update_layout(title="Random Values for All Elements", xaxis_title="Element", yaxis_title="Value")

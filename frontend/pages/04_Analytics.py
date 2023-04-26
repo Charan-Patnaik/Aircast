@@ -17,7 +17,6 @@ if "visibility" not in st.session_state:
     st.session_state.disabled = False
 
 
-
 ## Inputs
 # data = pd.DateFrame(col = ['Name','TimeFrame'])
 hours = [str(x).zfill(2) for x in range(24)]
@@ -31,7 +30,7 @@ def analytics_admin():
         ## GET API CALL for user list :
         token = st.session_state["authentication_status"]
         headers = {'Authorization': f'Bearer {token}'}
-        result_user_list = requests.get('http://backend:8000/admin/all-users',headers=headers).json()
+        result_user_list = requests.get('http://localhost:8000/admin/all-users',headers=headers).json()
         # print(result_user_list)
         # print(type(result_user_list))
 
@@ -73,7 +72,7 @@ def analytics_admin():
             date_request = date_selected.strftime("%m/%d/%Y")
             # print(date_request)
             payload = {'date_request':date_request}
-            api_hits_daily = requests.get(f"http://backend:8000/admin/api-hits-count/user/{user_id}",params = payload, headers=headers).json()
+            api_hits_daily = requests.get(f"http://localhost:8000/admin/api-hits-count/user/{user_id}",params = payload, headers=headers).json()
             # print(api_hits_daily)
             df_api_hits_daily = pd.DataFrame(api_hits_daily['api_req'])
             # print(df_api_hits_daily)
@@ -101,8 +100,8 @@ def analytics_admin():
         
         # myobj = {'station': 'ABI-L1b-RadC' ,'year': year_goes ,'day': doy,'hour':hour,'file_name': str(sl_file)}
         # print(myobj)
-        result = requests.get('http://backend:8000/admin/api-hits-previous-days',headers=headers).json()
-        code1 = requests.get('http://backend:8000/admin/api-hits-previous-days',headers=headers).status_code
+        result = requests.get('http://localhost:8000/admin/api-hits-previous-days',headers=headers).json()
+        code1 = requests.get('http://localhost:8000/admin/api-hits-previous-days',headers=headers).status_code
         # print(code1)
         
         variable_output = str(result['total_api_hits_in_previous_day'])
@@ -125,8 +124,8 @@ def analytics_admin():
         
         # myobj = {'station': 'ABI-L1b-RadC' ,'year': year_goes ,'day': doy,'hour':hour,'file_name': str(sl_file)}
         # print(myobj)
-        result = requests.get('http://backend:8000/admin/all-apis-hits-with-count-last-week',headers=headers).json()
-        code1 = requests.get('http://backend:8000/admin/all-apis-hits-with-count-last-week',headers=headers).status_code
+        result = requests.get('http://localhost:8000/admin/all-apis-hits-with-count-last-week',headers=headers).json()
+        code1 = requests.get('http://localhost:8000/admin/all-apis-hits-with-count-last-week',headers=headers).status_code
         # print(code1)
         
         variable_output_1 = str(result['total_api_hits_in_previous_week'])
@@ -151,8 +150,8 @@ def analytics_admin():
             
             token = st.session_state["authentication_status"]
             headers = {'Authorization': f'Bearer {token}'}
-            result = requests.get('http://backend:8000/admin/all-apis-hits-with-count-compare-success-failure',headers=headers).json()
-            code1 = requests.get('http://backend:8000/admin/all-apis-hits-with-count-compare-success-failure',headers=headers).status_code
+            result = requests.get('http://localhost:8000/admin/all-apis-hits-with-count-compare-success-failure',headers=headers).json()
+            code1 = requests.get('http://localhost:8000/admin/all-apis-hits-with-count-compare-success-failure',headers=headers).status_code
             
             variable_output_2 = str(result['success_count'])
             
@@ -171,8 +170,8 @@ def analytics_admin():
             
             token = st.session_state["authentication_status"]
             headers = {'Authorization': f'Bearer {token}'}
-            result = requests.get('http://backend:8000/admin/all-apis-hits-with-count-compare-success-failure',headers=headers).json()
-            code1 = requests.get('http://backend:8000/admin/all-apis-hits-with-count-compare-success-failure',headers=headers).status_code
+            result = requests.get('http://localhost:8000/admin/all-apis-hits-with-count-compare-success-failure',headers=headers).json()
+            code1 = requests.get('http://localhost:8000/admin/all-apis-hits-with-count-compare-success-failure',headers=headers).status_code
             
             variable_output_3 = str(result['failure_count'])
             
@@ -190,7 +189,7 @@ def analytics_admin():
         st.subheader("Each endpoint total number of calls")
         token = st.session_state["authentication_status"]
         headers = {'Authorization': f'Bearer {token}'}
-        result_api_list = requests.get('http://backend:8000/admin/all-apis-hits-with-count',headers=headers).json()
+        result_api_list = requests.get('http://localhost:8000/admin/all-apis-hits-with-count',headers=headers).json()
         del result_api_list['success']
         list_api = list(result_api_list.keys())
         list_calls = list(result_api_list.values())
@@ -209,7 +208,7 @@ def analytics_user():
         # ## GET API CALL for user list :
         # token = st.session_state["authentication_status"]
         # headers = {'Authorization': f'Bearer {token}'}
-        # result_user_list = requests.get('http://backend:8000/admin/all-users',headers=headers).json()
+        # result_user_list = requests.get('http://localhost:8000/admin/all-users',headers=headers).json()
         # # print(result_user_list)
         # # print(type(result_user_list))
 
@@ -251,7 +250,7 @@ def analytics_user():
             date_request = date_selected.strftime("%m/%d/%Y")
             # print(date_request)
             payload = {'date_request':date_request}
-            api_hits_daily = requests.get("http://backend:8000/admin/api-hits-count/user/1",params = payload, headers=headers).json()
+            api_hits_daily = requests.get("http://localhost:8000/admin/api-hits-count/user/1",params = payload, headers=headers).json()
             # print(api_hits_daily)
             df_api_hits_daily = pd.DataFrame(api_hits_daily['api_req'])
             # print(df_api_hits_daily)
@@ -279,8 +278,8 @@ def analytics_user():
         
         # myobj = {'station': 'ABI-L1b-RadC' ,'year': year_goes ,'day': doy,'hour':hour,'file_name': str(sl_file)}
         # print(myobj)
-        result = requests.get('http://backend:8000/admin/api-hits-previous-days',headers=headers).json()
-        code1 = requests.get('http://backend:8000/admin/api-hits-previous-days',headers=headers).status_code
+        result = requests.get('http://localhost:8000/admin/api-hits-previous-days',headers=headers).json()
+        code1 = requests.get('http://localhost:8000/admin/api-hits-previous-days',headers=headers).status_code
         # print(code1)
         
         variable_output = str(result['total_api_hits_in_previous_day'])
@@ -305,8 +304,8 @@ def analytics_user():
         # print(myobj)
 
         
-        result = requests.get('http://backend:8000/admin/all-apis-hits-with-count-last-week',headers=headers).json()
-        code1 = requests.get('http://backend:8000/admin/all-apis-hits-with-count-last-week',headers=headers).status_code
+        result = requests.get('http://localhost:8000/admin/all-apis-hits-with-count-last-week',headers=headers).json()
+        code1 = requests.get('http://localhost:8000/admin/all-apis-hits-with-count-last-week',headers=headers).status_code
         # print(code1)
         
         variable_output_1 = str(result['total_api_hits_in_previous_week'])
@@ -331,8 +330,8 @@ def analytics_user():
             
             token = st.session_state["authentication_status"]
             headers = {'Authorization': f'Bearer {token}'}
-            result = requests.get('http://backend:8000/admin/all-apis-hits-with-count-compare-success-failure',headers=headers).json()
-            code1 = requests.get('http://backend:8000/admin/all-apis-hits-with-count-compare-success-failure',headers=headers).status_code
+            result = requests.get('http://localhost:8000/admin/all-apis-hits-with-count-compare-success-failure',headers=headers).json()
+            code1 = requests.get('http://localhost:8000/admin/all-apis-hits-with-count-compare-success-failure',headers=headers).status_code
             
             variable_output_2 = str(result['success_count'])
             
@@ -351,8 +350,8 @@ def analytics_user():
             
             token = st.session_state["authentication_status"]
             headers = {'Authorization': f'Bearer {token}'}
-            result = requests.get('http://backend:8000/admin/all-apis-hits-with-count-compare-success-failure',headers=headers).json()
-            code1 = requests.get('http://backend:8000/admin/all-apis-hits-with-count-compare-success-failure',headers=headers).status_code
+            result = requests.get('http://localhost:8000/admin/all-apis-hits-with-count-compare-success-failure',headers=headers).json()
+            code1 = requests.get('http://localhost:8000/admin/all-apis-hits-with-count-compare-success-failure',headers=headers).status_code
             
             variable_output_3 = str(result['failure_count'])
             
@@ -370,7 +369,7 @@ def analytics_user():
         st.subheader("Each endpoint total number of calls")
         token = st.session_state["authentication_status"]
         headers = {'Authorization': f'Bearer {token}'}
-        result_api_list = requests.get('http://backend:8000/admin/all-apis-hits-with-count',headers=headers).json()
+        result_api_list = requests.get('http://localhost:8000/admin/all-apis-hits-with-count',headers=headers).json()
         del result_api_list['success']
         list_api = list(result_api_list.keys())
         list_calls = list(result_api_list.values())
@@ -382,9 +381,12 @@ def analytics_user():
 
 
 ##########  MAIN CODE #################
-print(st.session_state["user_status"])
+print("st.session_state[\"user_status\"]", st.session_state["user_status"])
+print("st.session_state[\"authentication_status\"] ", st.session_state["authentication_status"])
+
 if st.session_state["authentication_status"] == False:
       st.subheader("Please Login before use")
+
 else :
     if st.session_state['user_status'] == 1:
         analytics_admin()
