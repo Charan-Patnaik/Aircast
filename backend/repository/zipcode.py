@@ -11,6 +11,9 @@ def create(zipcodes, db: Session):
                 zipcode=str(row['ZIP']),
                 latitude=row['LAT'],
                 longitude=row['LNG'],
+                state_abbr = row['state_abbr'],
+                county = row['county'],
+                city = row['city'],
             ))
 
         db.bulk_save_objects(rows)

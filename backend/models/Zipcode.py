@@ -8,6 +8,9 @@ class ZipcodeModel(Base):
 
     id = Column(Integer, primary_key=True, index=True, autoincrement=True)
     zipcode = Column(String(255), unique=True)
+    state_abbr = Column(String(255), unique=False)
+    county = Column(String(255), unique=False)
+    city = Column(String(255), unique=False)
     latitude = Column(Numeric(8, 6))
     longitude = Column(Numeric(9, 6))
 
