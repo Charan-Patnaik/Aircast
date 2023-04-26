@@ -25,7 +25,7 @@ def init_db():
     UserRepository.create(User(username='admin', email=EmailStr('mail@heyitsrj.com'), password='spring2023', planId=1, userType = Role.Admin), db= db)
 
 
-    df = pd.read_csv('zip_code_with_state_coor.csv', dtype={'ZIP': str})
+    df = pd.read_csv('zip_code_with_state_coordinates.csv', dtype={'ZIP': str})
     zipcode.create(df, db= db)
 
 
