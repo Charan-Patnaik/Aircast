@@ -1,4 +1,3 @@
-#%%
 import numpy as np
 import pandas as pd
 from sklearn.preprocessing import MinMaxScaler
@@ -7,91 +6,80 @@ from tensorflow.keras.layers import LSTM, Dense
 from keras.models import Sequential
 from keras.layers import Dense, Dropout,LSTM
 import pickle
+from sqlalchemy import create_engine, Table, Column, Integer, String, Float, MetaData, DateTime
+import boto3
+import boto3.s3
+import botocore
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
+
+# AWS_ACCESS_KEY_ID = os.environ.get('AWS_ACCESS_KEY')
+# AWS_SECRET_ACCESS_KEY = os.environ.get('AWS_ACCESS_KEY_SECRET')
+# AWS_REGION_NAME = os.environ.get('AWS_REGION_NAME')
+
+## Importing 1 year data
+engine = create_engine('mysql+pymysql://admin:123456789@aircast.cjisewdv5jgk.us-east-1.rds.amazonaws.com:3306/aircast')
+# not in S3
+# my_list = ['300270006', '300290009', '300290049', '300298001', '300310019', '300490026', '300530018', '300630024', '300710010', '300750001', '300810007', '300830002', '300890007', '300930005', '301110066', '301110087', '310250002', '310550053', '310550056', '311079991', '311090016', '311090022', '311530007', '320010002', '320030024', '320030043', '320030044', '320030071', '320030298', '320030299', '320030540', '320030561', '320031501', '320050007', '320070005', '320190006', '320230014', '320230015', '320310020', '320310025', '320311005', '320311007', '320311026', '320312002', '320312009', '320330101', '325100020', '330012004', '330050007', '330074002', '330090010', '330111011', '330115001', '330131006', '330150014']
+# in s3
+# my_list = ['340010006', '340030006', '340030010', '340070002', '340110007', '340150002', '340170006', '340171002', '340171003', '340190001', '340210005', '340219991', '340230011', '340250005', '340273001', '340290006', '340315001', '340390004', '340392003', '340410007', '350010023', '350010026', '350010029', '350011012', '350011013', '350130008', '350130016', '350130019', '350130020', '350130021']
+my_list = ['350130022', '350130023', '350130024', '350130025', '350151005', '350250008', '350290003', '350431001', '350450009', '350450018', '350451005', '350490021', '350550005', '350610008', '360010012', '360050080', '360050110', '360050133', '360270007', '360290002', '360290023', '360291014', '360310003', '360410005', '360450002', '360470052', '360550015', '360590005', '360610115', '360610135', '360631006', '360671015', '360710002', '360750003', '360790005', '360810120', '360810124', '360810125', '360850111', '360870005', '360910004', '361010003', '361030002', '361030004', '361030009', '361099991', '361173001', '361192004', '370110002', '370130151', '370210030', '370210034', '370270003', '370319991', '370330001', '370350004', '370510009', '370510010', '370570002', '370630015', '370630099', '370650099', '370670022', '370670030', '370671008', '370750001', '370770001', '370810013', '370870008', '370870013', '370870035', '370870036', '371010002', '371070004', '371090004', '371139991', '371170001', '371190041', '371190045', '371190046', '371210004', '371230001', '371239991', '371290002', '371310003', '371450003', '371470006', '371570099', '371590021', '371730002', '371790003', '371830014', '371990004', '380130004', '380150003', '380171004', '380570004', '380650002', '381010003', '390030009', '390071001', '390130006', '390170018', '390170019', '390170020', '390170021', '390170023', '390179991', '390230001', '390230003', '390230005', '390250022', '390271002', '390350034', '390350038', '390350060', '390350064', '390350065', '390355002', '390410002', '390490038', '390490081', '390530006', '390550004', '390570006', '390610006', '390610010', '390610040', '390610048', '390810017', '390830003', '390850003', '390850007', '390870011', '390870012', '390890005', '390890008', '390930018', '390950024', '390950027', '390950035', '390970007', '391030004', '391090005', '391130038', '391150004', '391219991', '391331001', '391351001', '391510016', '391510020', '391510022', '391514005', '391530017', '391550011', '391550013', '391550014', '391670004', '391730003', '400170101', '400190297', '400270049', '400310651', '400370144', '400430860', '400470555', '400979014', '401050207', '401090097', '401091037', '401130226', '401210415', '401359021', '401430174', '401430175', '401430178', '401431127', '410170120', '410230002', '410290201', '410290203', '410390059', '410390060', '410430104', '410432003', '410470004', '410470007', '410470123', '410610120', '410670005', '420010001', '420030008', '420030064', '420030067', '420031008', '420050001', '420070005', '420070014', '420110011', '420130801', '420150011']
+# aqsid = '250250042'
+
+session = boto3.Session(
+    region_name='us-east-1',
+    aws_access_key_id='AKIAY5JK22NETTJWNQ46',
+    aws_secret_access_key='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')
+
+s3 = session.resource('s3')
+
+src_bucket = s3.Bucket('damg-aircast')
 
 
-def generating_pickle_files_all_sites(filename):
-	#%%
-	## Importing 1 year data
-	# print('>>>>>>>>>>>>>>>>  data extraction started')
-	# inp_data =  pd.read_csv('/Users/varshahindupur/Desktop/GitHub/Aircast/airflow/models/data/combine_data.csv',sep = ",")
-	# print('>>>>>>>>>>>>>>>>  data extraction done')
+# %%s
 
-	#%%
-	## Preprocessing
-	# droping null values
-	inp_data = inp_data.dropna()
+for aqsid in my_list:
 
-	# Select the last row
-	last_row = inp_data.iloc[-1]
-
-	# Drop the last row
-	inp_data.drop(last_row.name, inplace=True)
-
-	# Check if the hour column contains valid date format
-	mask = inp_data['hour'].str.contains('^\d{2}:\d{2}$')
-
-	# Filter out rows with invalid date formats
-	inp_data = inp_data[mask]
-
-	## Filter by AQSID
-	aqsid = '250250042'
-	inp_data['AQSID'] = inp_data['AQSID'].astype(str)
-	site_data = inp_data[inp_data['AQSID'] == aqsid].reset_index(drop = True)
-	print('>>>>>>>>>>>>>>>>  site data pull done')
 	####
 
+	#####################   DATA EXTRACTION FROM AWS DataBase #############################
+
+	####
+	# Read data from the SQL table into a dataframe
+	print('>>>>>>>>>>>>>>>>  data extraction started')
+	inp_data = pd.read_sql_query('SELECT * from aircast.StationsData WHERE aquid = "%s"' % aqsid, engine)
+	print('>>>>>>>>>>>>>>>>  data extraction done')
+
+	####
 	##################    FEATURE ENGINEERING  #############################
-
 	####
+	# Renaming columns :
+	inp_data = inp_data.rename(columns={'collection_timestamp':'datetime','ozone':'OZONE', 'so2':'SO2', 'no2':'NO2','co':'CO','pm2_5':'PM2.5','pm10':'PM10'})
 
-	###### Droping unrequired columns
-	site_df = site_data.copy()
-	site_df = site_df.drop(columns = ['AQSID','sitename','GMT offset','reporting units','datasource'])
+	df = inp_data.copy()
+	# Create a boolean array of the same shape as the dataframe
+	df = df.replace('NULL',0)
+	# Dropping a list of columns with all values 'NULL'
+	df = df.drop(columns=df.columns[df.isnull().all()].tolist())
+	## Storing aqs_id:
+	aqsid = df['aquid'].iloc[0]
 
-	## Creating datetime stamp column from input
-	site_df['datetime'] = pd.to_datetime(site_df.date.astype(str) + ' ' + site_df.hour.astype(str) + ':00')
-	site_df['datetime'] = pd.to_datetime(site_df['datetime'])
+	# Dropping un-required columns
+	df = df.drop(columns = ['aquid','id'])
 
-	## Drop unrequired columns
-	site_df.drop(columns = ['date','hour'])
-	# Rearrange the columns
-	site_df = site_df[['datetime','parameter name','value']]
+	## setting 'datetime' column as index
+	check = df.copy()
+	check = check.set_index('datetime')
 
-	## Creating df's for required major pollutants
-	no2_df = pd.DataFrame()
-	pm25_df = pd.DataFrame()
-	pm10_df = pd.DataFrame()
-	co_df = pd.DataFrame()
-	ozone_df = pd.DataFrame()
-	so2_df = pd.DataFrame()
-	if 'NO2' in site_df['parameter name'].unique():
-		no2_df = site_df[site_df['parameter name'] == 'NO2'].reset_index(drop=True)
-	if 'PM2.5' in site_df['parameter name'].unique():
-		pm25_df = site_df[site_df['parameter name'] == 'PM2.5'].reset_index(drop=True)
-	if 'PM10' in site_df['parameter name'].unique():
-		pm10_df = site_df[site_df['parameter name'] == 'PM10'].reset_index(drop=True)
-	if 'CO' in site_df['parameter name'].unique():
-		co_df = site_df[site_df['parameter name'] == 'CO'].reset_index(drop=True)
-	if 'OZONE' in site_df['parameter name'].unique():
-		ozone_df = site_df[site_df['parameter name'] == 'OZONE'].reset_index(drop=True)
-	if 'SO2' in site_df['parameter name'].unique():
-		so2_df = site_df[site_df['parameter name'] == 'SO2'].reset_index(drop=True)
+	## Sorting values
+	df_sorted = check.sort_values(by='datetime')
 
-
-	### Combining the segregated pollutant data together:
-	req_df = pd.DataFrame()
-	temp_df = pd.DataFrame()
-	for i in ['NO2','SO2','OZONE','CO','PM10','PM2.5']:
-		if i in site_df['parameter name'].unique():
-			temp_df = site_df[site_df['parameter name'] == i ].reset_index(drop=True)
-			req_df = pd.concat([req_df, temp_df]).reset_index(drop = True)
-
-	# Create the new dataframe with datetime as the index, parameter as the columns, and values as the cells
-	req_pivot = req_df.pivot_table(index='datetime', columns='parameter name', values='value')
-	## Sorting
-	df_sorted = req_pivot.sort_values(by='datetime')
-	## Droping null values
-	df_sorted = df_sorted.dropna()
+	## Converting type of the Columns data of Pollutants:
+	for i in df_sorted.columns:
+		df_sorted[i] = df_sorted[i].astype(float)
+	print(df_sorted.info(),'df_sorted_info()')
 
 	print('>>>>>>>>>>>>>>>>  Feature engineering done')
 
@@ -119,6 +107,7 @@ def generating_pickle_files_all_sites(filename):
 	print('>>>>>>>>>>>>>>>> pickle generation started for :', aqsid)
 	## Pickle generation:
 	df = df_sorted.copy()
+	print(df.info(),'df_info()')
 	values = df.values
 	column_names = df.columns.tolist()
 	scaler = MinMaxScaler()
@@ -146,6 +135,10 @@ def generating_pickle_files_all_sites(filename):
 	# save the model to disk
 	filename = '%s.pkl' % aqsid
 	pickle.dump(model, open(filename, 'wb'))
+
+	# s3 bucket file upload
+	src_bucket.upload_file(filename, f"models/{filename}")
+
 
 	print('>>>>>>>>>>>>>>>> pickle generation ended for :', aqsid)
 

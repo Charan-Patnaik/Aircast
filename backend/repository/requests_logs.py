@@ -171,7 +171,12 @@ def get_all_apis_list_with_count_last_week(db: Session, user_id = None):
 
 def get_zipcode_using_lat_long(zipcode, db: Session):
 
+    print("^^^^^^^^^^")
+    print(zipcode, ZipcodeModel.zipcode)
+    print("^^^^^^^^^^")
+
     zip: ZipcodeModel = db.query(ZipcodeModel).filter(ZipcodeModel.zipcode==zipcode).first()
+
     print("***************")
     print(zip.latitude, zip.longitude)
     print("***************")
@@ -180,6 +185,9 @@ def get_zipcode_using_lat_long(zipcode, db: Session):
 
 def get_all_nearest_sitenames(zipcode, db: Session):
     l = []
+    print("^^^^^^^^^^")
+    print(zipcode)
+    print("^^^^^^^^^^")
     lat, lng = get_zipcode_using_lat_long(zipcode, db)
     radius = 50
 
@@ -200,7 +208,11 @@ def get_all_nearest_sitenames(zipcode, db: Session):
     result = []
 
     for i in l:
+
+        aqsid = ''
+
         records = i.to_json_for_retrieving_stations_data()
+        print(records)
         records = ast.literal_eval(records['parameter_list'])
 
         result.append(records)
