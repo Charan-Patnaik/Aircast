@@ -23,3 +23,16 @@ class StationsDataModel(Base):
     #         "id": str(self.id),
     #         "username": str(self.username)
     #     }
+
+    # def to_json_for_retrieving_stations_data(self):
+    #     return {
+    #         'id' : str(self.id),
+    #         'aquid' : str(self.aquid),
+    #         'collection_timestamp' : str(self.collection_timestamp),
+    #         'ozone' : str(self.ozone),
+    #         'so2' : str(self.so2),
+    #         'no2' : str(self.no2),
+    #         'co' : str(self.co),
+    #         'pm2_5' : str(self.pm2_5),
+    #         'pm10' : str(self.pm10)
+    #     }
