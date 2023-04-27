@@ -150,8 +150,8 @@ def get_all_nearest_sitenames(zipcode, db: Session):
 
 
         final_result.append({
-            "station": key,
-            "pollutant": value
+            "station": stations_name,
+            "pollutant": station_parameters
         })
         
 
