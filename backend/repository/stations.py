@@ -146,14 +146,20 @@ def get_all_nearest_sitenames(zipcode, db: Session):
 
     final_result = []
 
-    for key, value in result.items():
+    for stations_name, station_parameters in result.items():
+
+
         final_result.append({
             "station": key,
             "pollutant": value
         })
+        
 
     return {
         "success": True,
         "stations": final_result
         }
+
+
+
 
