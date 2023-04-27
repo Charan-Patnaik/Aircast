@@ -74,7 +74,7 @@ x-airflow-common:
     AIRFLOW__CORE__DAGBAG_IMPORT_TIMEOUT: 300
     # WARNING: Use _PIP_ADDITIONAL_REQUIREMENTS option ONLY for a quick checks
     # for other purpose (development, test and especially production usage) build/extend Airflow image.
-    _PIP_ADDITIONAL_REQUIREMENTS: ${_PIP_ADDITIONAL_REQUIREMENTS:- pandas statsmodels scikit-learn SQLAlchemy python-dotenv pymysql boto3 pickle scikit-learn tensorflow keras numpy pandas}
+    _PIP_ADDITIONAL_REQUIREMENTS: ${_PIP_ADDITIONAL_REQUIREMENTS:- pandas statsmodels scikit-learn SQLAlchemy python-dotenv pymysql boto3}
     # AWS_ACCESS_KEY: ${AWS_ACCESS_KEY}
     # AWS_SECRET_KEY: ${AWS_SECRET_KEY}
     # S3_BUCKET_NAME: ${S3_BUCKET_NAME}

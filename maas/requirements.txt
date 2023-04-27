@@ -1,0 +1,9 @@
+numpy
+pandas
+sqlalchemy
+boto3
+python-dotenv
+pymysql
+scikit-learn
+uvicorn
+fastapi==0.92.0

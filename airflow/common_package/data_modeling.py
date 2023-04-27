@@ -4,12 +4,12 @@ import boto3
 import boto3.s3
 import botocore
 from sqlalchemy import create_engine, Table, Column, Integer, String, Float, MetaData, DateTime, text
-import numpy as np
-import pandas as pd
-from sklearn.preprocessing import MinMaxScaler
-from keras.models import Sequential
-from keras.layers import Dense, LSTM
-import pickle
+# import numpy as np
+# import pandas as pd
+# from sklearn.preprocessing import MinMaxScaler
+# from keras.models import Sequential
+# from keras.layers import Dense, LSTM
+# import pickle
 
 session = boto3.Session(
     region_name='us-east-1',

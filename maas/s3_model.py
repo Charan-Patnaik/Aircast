@@ -43,6 +43,6 @@ class S3Model():
 S3ModelObj = S3Model()
 
 # %%
-S3ModelObj.download_model_in_directory(model_pickle_name='250250042.pkl')
+# S3ModelObj.download_model_in_directory(model_pickle_name='250250042.pkl')
 
 # %%
