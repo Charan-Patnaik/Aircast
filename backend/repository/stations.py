@@ -8,6 +8,16 @@ import json
 from models.Stations import StationsModel
 from models.Zipcode import ZipcodeModel
 
+import requests
+import os
+
+from dotenv import load_dotenv
+
+load_dotenv()
+
+BASE_URL_FOR_MAAS = os.environ.get('BASE_URL_PREDICITON')
+
+
 def create(stations, db: Session):
     try:
         rows = []
@@ -146,18 +156,42 @@ def get_all_nearest_sitenames(zipcode, db: Session):
 
     final_result = []
 
+
+    # new_list = []
+
+    combined_list= []
+
+    list_of_list = []
     for stations_name, station_parameters in result.items():
+        new_list = []
 
+        response = requests.post( f"{BASE_URL_FOR_MAAS}/get-prediction-for-station-id/{stations_name}", headers={"accept": "application/json"})
+        if(response.status_code == 200):
+            predictions_list = response.json()['predictions']
 
-        final_result.append({
-            "station": stations_name,
-            "pollutant": station_parameters
-        })
+            # new_list = []
+            new_item = {}
+            # for i in station_parameters:
+            for item in predictions_list:
+                    # ozone = item['OZONE']
+                    # so2 = item['SO2']
+                    # no2 = item['NO2']
+                    # pm25 = item['PM2.5']
+                    # new_item = {i: item[f'{i}']}
+                for i in station_parameters:
+                    new_item[i] = item[f'{i}']
         
+                new_list.append(new_item)
+        
+        list_of_list.append(new_list)
+
+    print(list_of_list)
+
+    combined_list = [dict1.update(dict2) or dict1 for dict1, dict2 in zip(*list_of_list)]
 
     return {
         "success": True,
-        "stations": final_result
+        "stations": combined_list
         }
 
 
