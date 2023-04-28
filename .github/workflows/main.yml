@@ -41,6 +41,7 @@ jobs:
          SECRET_KEY: ${{ secrets.SECRET_KEY }}
         run: | 
           cd ./backend/
+          pip install -e .
           pytest
           
   deploy:
