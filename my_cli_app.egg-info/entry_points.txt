@@ -1,0 +1,2 @@
+[console_scripts]
+my-cli-app = cli.main:app

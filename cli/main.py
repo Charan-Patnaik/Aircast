@@ -6,8 +6,8 @@ import typer
 from datetime import datetime
 
 
-base_url ='http://backend:8000'
-app = typer.Typer()
+base_url ='http://ec2-54-83-127-235.compute-1.amazonaws.com:8000'
+app = typer.Typer(help="DaaS for Aircast")
 
 
 @app.command()
