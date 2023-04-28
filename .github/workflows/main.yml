@@ -67,8 +67,7 @@ jobs:
           username: ${{ secrets.USER_NAME }}
           key: ${{ secrets.AWS_PRIVATE_KEY }}
           script: |
-              cd /home/ubuntu/Assignment-02
-              rm GOESmetadata.db
+              cd /home/ubuntu/Aircast
               git checkout main
               git fetch --all
               git reset --hard origin/main

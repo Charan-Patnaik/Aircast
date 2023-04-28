@@ -6,7 +6,7 @@ import typer
 from datetime import datetime
 
 
-base_url ='http://localhost:8000'
+base_url ='http://backend:8000'
 app = typer.Typer()
 
 
