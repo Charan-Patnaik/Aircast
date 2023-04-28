@@ -11,7 +11,8 @@ import openai
 from streamlit_extras.switch_page_button import switch_page
 from dotenv import load_dotenv
 import re
-
+import random
+import os
 load_dotenv()
 def check_four_digit_number(string):
     # Compile the regular expression
@@ -21,7 +22,22 @@ def check_four_digit_number(string):
         return True
     else:
         return False
-import os
+def generate_openai_result(pollulant_value):
+    aqi = random.randint(36, 40)
+
+    parameter = "ozone"
+    #setting the API KEY here
+    openai.api_key = os.environ.get('OPEN_AI_API_KEY')
+    completion = openai.ChatCompletion.create(
+    model="gpt-3.5-turbo", 
+    messages = [
+        {'role': 'user', 'content': "I am an air quality expert. Answer the below in less than 50 words as an air quality expert: what are effects of AQI {} {} what range is it in and what are the effects on health?".format(aqi, parameter)}
+    ],
+    temperature = 0.10)
+
+    response  = completion.choices[0].message.content
+    return response
+
 if 'authentication_status' not in st.session_state:
     st.session_state['authentication_status'] = False
 if 'user_status' not in st.session_state:
@@ -554,23 +570,12 @@ else:
                     result = requests.get(f"http://localhost:8000/aircast/prediction-for-zipcode?zipcode={zip_input}",headers=headers)
             
                     if result.status_code == 200:
-                        st.write(":blue[AQI Insights]")
+                        st.subheader(":blue[AQI Insights]")
                         # Set the AQI value and parameter
                         print(result.status_code, "Status code")
-                        aqi = 35
-                        parameter = "ozone"
-                        #setting the API KEY here
-                        openai.api_key = os.environ.get('OPEN_AI_API_KEY')
-                        completion = openai.ChatCompletion.create(
-                        model="gpt-3.5-turbo", 
-                        messages = [
-                            {'role': 'user', 'content': "I am an air quality expert. Answer the below in less than 50 words as an air quality expert: what are effects of AQI {} {} what range is it in and what are the effects on health?".format(aqi, parameter)}
-                        ],
-                        temperature = 0.10)
-
-                        response  = completion.choices[0].message.content
-                        print(response)
-                        st.write(str(response))
+                        
+                        insight = generate_openai_result('insight')
+                        st.write(insight)
                         output = result.json()
                         print(output)
                         db_elements = list(output['stations'][0].keys())
@@ -587,7 +592,7 @@ else:
                                 for i in range(0, 24):
                                     x_values.append(str(i).zfill(2))
                                 fig_ozone = go.Figure([go.Scatter(x=list(x_values), y=y_values, mode='lines')])
-                                fig_ozone.update_layout(title="Quantity of O3 in Air" , xaxis_title='OZONE', yaxis_title="Value")
+                                fig_ozone.update_layout(title="Quantity of O3 in Air" , xaxis_title='OZONE', yaxis_title="PPB")
                                 st.plotly_chart(fig_ozone)
                             elif el == "NO2":
                                 y_values = predictions['NO2']
@@ -595,7 +600,7 @@ else:
                                 for i in range(0, 24):
                                     x_values.append(str(i).zfill(2))
                                 fig_no2 = go.Figure([go.Scatter(x=list(x_values), y=y_values, mode='lines')])
-                                fig_no2.update_layout(title="Quantity of NO2 in Air" , xaxis_title='NO2', yaxis_title="Value")
+                                fig_no2.update_layout(title="Quantity of NO2 in Air" , xaxis_title='NO2', yaxis_title="PPB")
                                 st.plotly_chart(fig_no2)
                             elif el == "SO2":
                                 y_values = predictions['SO2']
@@ -603,7 +608,7 @@ else:
                                 for i in range(0, 24):
                                     x_values.append(str(i).zfill(2))
                                 fig_so2 = go.Figure([go.Scatter(x=list(x_values), y=y_values, mode='lines')])
-                                fig_so2.update_layout(title="Quantity of SO2 in Air" , xaxis_title='SO2', yaxis_title="Value")
+                                fig_so2.update_layout(title="Quantity of SO2 in Air" , xaxis_title='SO2', yaxis_title="PPB")
                                 st.plotly_chart(fig_so2)
                             elif el == "CO":
                                 y_values = predictions['CO']
@@ -611,7 +616,7 @@ else:
                                 for i in range(0, 24):
                                     x_values.append(str(i).zfill(2))
                                 fig_co = go.Figure([go.Scatter(x=list(x_values), y=y_values, mode='lines')])
-                                fig_co.update_layout(title="Quantity of CO in Air" , xaxis_title='CO', yaxis_title="Value")
+                                fig_co.update_layout(title="Quantity of CO in Air" , xaxis_title='CO', yaxis_title="PPM")
                                 st.plotly_chart(fig_co)
                             elif el == "PM2.5":
                                 y_values = predictions['PM2.5']
@@ -619,7 +624,7 @@ else:
                                 for i in range(0, 24):
                                     x_values.append(str(i).zfill(2))
                                 fig_pm2_5 = go.Figure([go.Scatter(x=list(x_values), y=y_values, mode='lines')])
-                                fig_pm2_5.update_layout(title="Quantity of PM2.5 in Air" , xaxis_title='PM2.5', yaxis_title="Value")
+                                fig_pm2_5.update_layout(title="Quantity of PM2.5 in Air" , xaxis_title='PM2.5', yaxis_title="UG/M3")
                                 st.plotly_chart(fig_pm2_5)
                             elif el == "PM10":
                                 y_values = predictions['PM10']
@@ -627,11 +632,25 @@ else:
                                 for i in range(0, 24):
                                     x_values.append(str(i).zfill(2))
                                 fig_pm10 = go.Figure([go.Scatter(x=list(x_values), y=y_values, mode='lines')])
-                                fig_pm10.update_layout(title="Quantity of PM10 in Air" , xaxis_title='PM10', yaxis_title="Value")
+                                fig_pm10.update_layout(title="Quantity of PM10 in Air" , xaxis_title='PM10', yaxis_title="UG/M3")
                                 st.plotly_chart(fig_pm10)
                     elif result.status_code == 503:
                         st.error("API limit reached")
 
                         
 
- 
+def generate_openai_result(ozone_value):
+    aqi = random.randint(36, 40)
+
+    parameter = "ozone"
+    #setting the API KEY here
+    openai.api_key = os.environ.get('OPEN_AI_API_KEY')
+    completion = openai.ChatCompletion.create(
+    model="gpt-3.5-turbo", 
+    messages = [
+        {'role': 'user', 'content': "I am an air quality expert. Answer the below in less than 50 words as an air quality expert: what are effects of AQI {} {} what range is it in and what are the effects on health?".format(aqi, parameter)}
+    ],
+    temperature = 0.10)
+
+    response  = completion.choices[0].message.content
+    return response
