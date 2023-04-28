@@ -31,7 +31,6 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r ./backend/requirements.txt
           pip install -e ./backend/
-          cd ./backend
 
       - name: Run Testcases
         env:
@@ -41,6 +40,7 @@ jobs:
          ACCESS_TOKEN_EXPIRE_MINUTES: ${{ secrets.ACCESS_TOKEN_EXPIRE_MINUTES }}
          SECRET_KEY: ${{ secrets.SECRET_KEY }}
         run: | 
+          cd ./backend/
           pytest
           
   deploy:
