@@ -7,15 +7,15 @@ This is a complete system ensuring user to get access to Air Quality Prediction.
 
 ### Live Application Links:
 
-** CodeLabs & Reports: ** https://codelabs-preview.appspot.com/?file_id=16Ka_g7q11hxCaiDtUhf8-CdDosMPoCXQ0UdtEbx7SA0#1
+**CodeLabs & Reports:** https://codelabs-preview.appspot.com/?file_id=16Ka_g7q11hxCaiDtUhf8-CdDosMPoCXQ0UdtEbx7SA0#1
 
-** Airflow: ** http://ec2-44-202-229-216.compute-1.amazonaws.com:8080/
+**Airflow:** http://ec2-44-202-229-216.compute-1.amazonaws.com:8080/
 
-** Streamlit: ** http://ec2-54-83-127-235.compute-1.amazonaws.com/
+**Streamlit:** http://ec2-54-83-127-235.compute-1.amazonaws.com/
 
-** FastAPI: ** http://ec2-54-83-127-235.compute-1.amazonaws.com:8000/docs
+**FastAPI:** http://ec2-54-83-127-235.compute-1.amazonaws.com:8000/docs
 
-** MaaS Hosted URL: ** http://3.93.199.166/docs
+**MaaS Hosted URL:** http://3.93.199.166/docs
 
 
 
