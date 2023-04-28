@@ -4,3 +4,4 @@ pandas
 streamlit-extras
 plotly
 openai
+python-dotenv

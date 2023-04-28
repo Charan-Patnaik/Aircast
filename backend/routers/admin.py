@@ -48,7 +48,7 @@ def get_user_api_hits_for_particular_days_for_user(user_id, date_request: str, g
 
 
 @router.get('/all-apis-hits-with-count')
-def get_all_apis_list(get_current_user: TokenData = Depends(get_current_user), db: Session = Depends(db.get_db)):
+def get_all_apis_list_by_count(get_current_user: TokenData = Depends(get_current_user), db: Session = Depends(db.get_db)):
 
     if get_current_user.userType == 1:
         return get_all_apis_list_with_count(db = db)

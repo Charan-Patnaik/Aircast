@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 import pytest
 
 #%%
-load_dotenv()
+load_dotenv('.env')
 
 #%%
 # Load the environment variables
@@ -13,7 +13,7 @@ DB_HOST = os.environ.get('DB_HOST')
 DB_USER = os.environ.get('DB_USER')
 DB_PASSWORD = os.environ.get('DB_PASSWORD')
 DB_NAME = os.environ.get('DB_NAME')
-DB_PORT = int(os.environ.get('DB_PORT'))
+DB_PORT = 3306
 
 #%%
 def create_conn():

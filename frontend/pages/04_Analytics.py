@@ -388,6 +388,6 @@ if st.session_state["authentication_status"] == False:
       st.subheader("Please Login before use")
 else :
     if st.session_state['user_status'] == 1:
-        analytics_admin()
-    else:
         analytics_user()
+    else:
+        analytics_admin()

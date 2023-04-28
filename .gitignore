@@ -9,3 +9,4 @@ ML/check.csv
 aircast.egg-info
 *.pkl
 backend/data.csv
+backend/aircast_backend.egg-info
