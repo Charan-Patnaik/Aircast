@@ -7,6 +7,7 @@ from fastapi.responses import JSONResponse
 from schemas.Responses import response
 from sqlalchemy import or_
 import uuid
+from aws_cloud.cloud_watch import log_login_success, log_login_failed, log_sign_up
 
 
 def create(request: User, db: Session):
@@ -33,6 +34,7 @@ def create(request: User, db: Session):
         db.commit()
         db.refresh(new_user)
         
+        log_sign_up(request.username, request.email)
         return JSONResponse(
             status_code = status.HTTP_201_CREATED,
             content= {
@@ -62,10 +64,12 @@ def find_user(username: str, password: str, db: Session):
     user = db.query(UserModel).filter(UserModel.username == username).first()
     
     if not user:
+        log_login_failed(username= username)
         return response.not_found(f"User with the username '{username}' not found")
 
     
     if not hashing.Hash().verify_password(user.password, password=password):
+        log_login_failed(username= username)
         return JSONResponse(
                 status_code= status.HTTP_401_UNAUTHORIZED,
                 content= {
@@ -75,5 +79,6 @@ def find_user(username: str, password: str, db: Session):
         )
     
     access_token = JWT_token.create_access_token(data={"id": user.id, "email": user.email})
+    log_login_success(username= username)
     
     return LoginResponse(username= str(user.username), email= str(user.email), access_token= access_token, token_type= 'bearer', user_type = 1 if user.userType == Role.Admin else 2)
