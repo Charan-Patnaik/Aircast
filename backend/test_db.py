@@ -38,12 +38,14 @@ def cursor():
     conn.close()
 
 #%%
+#1
 # Define a function to test the SQL data
 def test_sql_data(cursor):
     cursor.execute("SELECT * FROM Stations LIMIT 10;")
     result = cursor.fetchall()
     return result
 
+#2
 def test_station_id(cursor):
     # Test that all station ids are unique and greater than 0
     cursor.execute("SELECT id FROM Stations")
@@ -51,6 +53,7 @@ def test_station_id(cursor):
     assert len(ids) == len(set(ids))  # all ids are unique
     assert all(id[0] > 0 for id in ids)  # all ids are greater than 0
 
+#3
 def test_station_location(cursor):
     # Test that all station locations are within valid coordinates
     cursor.execute("SELECT latitude, longitude FROM Stations")
