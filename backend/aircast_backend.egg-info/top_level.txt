@@ -1,6 +1,0 @@
-aws_cloud
-middlewares
-models
-repository
-schemas
-utils

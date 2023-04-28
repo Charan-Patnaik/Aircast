@@ -197,13 +197,16 @@ def get_user_api_request_in_day_admin(db: Session, user_id = None):
 def get_all_apis_list_with_count(db: Session, user_id = None):
 
     if user_id is None:
-        result_nearest_sitenames  = db.query(UserRequestsModel).filter(UserRequestsModel.endpoint == '/admin/api-sitenames-nearest', or_(UserRequestsModel.statusCode == 201, UserRequestsModel.statusCode == 200)).count()
+        result_nearest_sitenames  = db.query(UserRequestsModel).filter(UserRequestsModel.endpoint == '/aircast/prediction-for-zipcode', or_(UserRequestsModel.statusCode == 201, UserRequestsModel.statusCode == 200)).count()
+        result_aircast_get_data_by_site  = db.query(UserRequestsModel).filter(UserRequestsModel.endpoint == '/aircast/get-data-by-site', or_(UserRequestsModel.statusCode == 201, UserRequestsModel.statusCode == 200)).count()
     else:
-        result_nearest_sitenames  = db.query(UserRequestsModel).filter(UserRequestsModel.endpoint == '/admin/api-sitenames-nearest', or_(UserRequestsModel.statusCode == 201, UserRequestsModel.statusCode == 200)).count()
+        result_nearest_sitenames  = db.query(UserRequestsModel).filter(UserRequestsModel.endpoint == '/aircast/prediction-for-zipcode', or_(UserRequestsModel.statusCode == 201, UserRequestsModel.statusCode == 200)).count()
+        result_aircast_get_data_by_site  = db.query(UserRequestsModel).filter(UserRequestsModel.endpoint == '/aircast/get-data-by-site', or_(UserRequestsModel.statusCode == 201, UserRequestsModel.statusCode == 200)).count()
 
     return {
         'success': True,
-        '/admin/api-sitenames-nearest': result_nearest_sitenames
+        '/aircast/prediction-for-zipcode': result_nearest_sitenames,
+        '/aircast/get-data-by-site': result_aircast_get_data_by_site
     }
 
 
@@ -233,3 +236,14 @@ def get_admin_success_failure_comparison(db: Session, user_id = None):
 
 
     return total_api_hits, total_succesfull_api_hits
+
+
+def get_each_api_request_admin_all(db: Session, user_id = None):
+
+    today = date.today()
+    if user_id is None:
+        total_api_hits = db.query(UserRequestsModel).filter(and_(cast(UserRequestsModel.created_date, Date) <= today)).count()
+    else:
+        total_api_hits = db.query(UserRequestsModel).filter(and_(cast(UserRequestsModel.created_date, Date) <= today, UserRequestsModel.user_id == user_id)).count()
+
+    return total_api_hits

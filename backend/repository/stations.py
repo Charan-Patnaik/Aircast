@@ -8,6 +8,8 @@ import json
 from models.Stations import StationsModel
 from models.Zipcode import ZipcodeModel
 from models.ZipDataDailyCache import ZipDataDailyCacheModel
+from fastapi.responses import JSONResponse
+from fastapi import status
 
 import requests
 import os
@@ -67,9 +69,18 @@ def get_specified_site_data_link(stations:str, start_date, end_date, db: Session
 
     # Write data_list to a CSV file
     with open('data.csv', 'w', newline='') as csvfile:
-        writer = csv.DictWriter(csvfile, fieldnames=data_list[0].keys())
-        writer.writeheader()
-        writer.writerows(data_list)
+        try:
+            writer = csv.DictWriter(csvfile, fieldnames=data_list[0].keys())
+            writer.writeheader()
+            writer.writerows(data_list)
+        except Exception as e:
+            return JSONResponse(
+                status_code = status.HTTP_404_NOT_FOUND,
+                content= {
+                    "success": False,
+                    "message": f"Data for Station ID {stations} not found in the date range"
+                }
+            )
 
     
     url_file = file_upload('data.csv')
