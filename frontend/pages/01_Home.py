@@ -537,7 +537,7 @@ if search_btn:
                 # print(date_request)
             # payload = {'date_request':date_request}
 
-            result = requests.get(f"http://localhost:8000/aircast/prediction-for-zipcode?zipcode={zip_input}",headers=headers)
+            result = requests.get(f"http://backend:8000/aircast/prediction-for-zipcode?zipcode={zip_input}",headers=headers)
 
             if result.status_code == 200:
                 output = result.json()
