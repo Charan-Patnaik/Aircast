@@ -15,3 +15,4 @@ python-jose[cryptography]
 python-multipart
 boto3==1.26.65
 redis
+pandas==2.0.1
