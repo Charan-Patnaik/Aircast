@@ -28,5 +28,5 @@ def get_plan_by_user_id(user_id:int, db: Session):
     if user != None:
         return 1
     else:
-        return user.plan    
+        return user.plan
 

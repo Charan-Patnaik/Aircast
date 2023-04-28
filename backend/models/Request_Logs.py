@@ -12,7 +12,7 @@ class UserRequestsModel(Base):
     user_id = Column(Integer, ForeignKey('Users.id'), unique=False)
     endpoint = Column(String(255), unique=False)
     statusCode = Column(Integer, nullable=True)
-    created_date = Column(DateTime, default= datetime.datetime.now)
+    created_date = Column(DateTime, default= datetime.datetime.utcnow)
 
     user = relationship('UserModel', back_populates="requests")
 

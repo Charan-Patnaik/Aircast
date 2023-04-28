@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 import uvicorn
-from routers import user, service_plans, admin
+from routers import user, service_plans, admin, aircast
 from config.db import Base, engine, SessionLocal
 import repository.user as UserRepository
 import repository.service_plans as servicePlans
@@ -40,6 +40,7 @@ async def startup():
     app.include_router(user.router)
     app.include_router(service_plans.router)
     app.include_router(admin.router)
+    app.include_router(aircast.router)
 
 
     init_db()
@@ -54,11 +55,4 @@ async def index():
 if __name__ == '__main__':
     # start the server
     uvicorn.run(app, host='127.0.0.1', port=8000)
-
-
-# def get_uvicorn_app():
-#     return app
-
-# def get_test_client_app():
-#     return client
 

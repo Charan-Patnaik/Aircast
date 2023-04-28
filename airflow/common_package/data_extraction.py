@@ -233,3 +233,12 @@ def data_extraction_two_days():
     _insert_two_days_json_in_table(result_json)
 
 
+def clear_cache():
+    engine = create_engine(SQLALCHEMY_DATABASE_URL)
+
+
+    conn = engine.connect()
+    
+    truncate_query = text("TRUNCATE TABLE ZipDataDailyCache")
+    conn.execution_options(autocommit=True).execute(truncate_query)
+    print("Data truncated in SQL Successfully")

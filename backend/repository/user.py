@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
 from models.User import UserModel
-from schemas.User import LoginResponse, User
+from schemas.User import LoginResponse, User, Role
 from utils import hashing, JWT_token
 from fastapi import status
 from fastapi.responses import JSONResponse
@@ -28,7 +28,7 @@ def create(request: User, db: Session):
             return response.conflict(f"User with the email '{request.email}' or username '{request.username}' already exists!")
 
 
-        new_user = UserModel(username=request.username, email=request.email, password= hashing.Hash().get_hashed_password(request.password), planId = request.planId, apiKey = str(uuid.uuid4()))
+        new_user = UserModel(username=request.username, email=request.email, password= hashing.Hash().get_hashed_password(request.password), planId = request.planId, apiKey = str(uuid.uuid4()), userType = Role.User)
         db.add(new_user)
         db.commit()
         db.refresh(new_user)
@@ -76,4 +76,4 @@ def find_user(username: str, password: str, db: Session):
     
     access_token = JWT_token.create_access_token(data={"id": user.id, "email": user.email})
     
-    return LoginResponse(username= str(user.username), email= str(user.email), access_token= access_token, token_type= 'bearer')
+    return LoginResponse(username= str(user.username), email= str(user.email), access_token= access_token, token_type= 'bearer', user_type = 1 if user.userType == Role.Admin else 2)
