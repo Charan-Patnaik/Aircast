@@ -115,7 +115,7 @@ elif st.session_state['reg_status'] == True and st.session_state['done_status'] 
         if st.button("Register"):
             st.session_state['reg_button'] = True
         if st.session_state['reg_button'] == True:
-            url = 'http://localhost:8000/user/sign-up'
+            url = 'http://backend:8000/user/sign-up'
             print(user_name,"user_name")
             myobj = {'username': user_name ,'password': password, 'email' : email,'planId': st.session_state['plan_id']}
             print(password,"password")
