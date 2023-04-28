@@ -3,8 +3,6 @@ setup.py
 backend/__init__.py
 backend/main.py
 backend/setup.py
-backend/test_db.py
-backend/test_main.py
 backend/aws_cloud/__init__.py
 backend/aws_cloud/cloud_watch.py
 backend/aws_cloud/s3_upload.py
@@ -44,3 +42,5 @@ my_cli_app.egg-info/dependency_links.txt
 my_cli_app.egg-info/entry_points.txt
 my_cli_app.egg-info/requires.txt
 my_cli_app.egg-info/top_level.txt
+test/test_db.py
+test/test_main.py

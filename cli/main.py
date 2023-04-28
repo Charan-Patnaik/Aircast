@@ -112,9 +112,9 @@ def downloadfile(stations_id: int = typer.Option(..., "--station", '-s', help="P
 
 
 def store_token(token:str):
-    if not os.path.exists('config'):
-        os.makedirs('config')
-        print('data directory created successfully')
+    # if not os.path.exists('config'):
+    #     os.makedirs('config')
+    #     print('data directory created successfully')
 
     with open("config", "w") as text_file:
         text_file.write(token)
@@ -128,9 +128,12 @@ def get_token():
     return data
 
 def delete_token():
-    f = open("config", "r+") 
-    f.seek(0) 
-    f.truncate() 
+    if not os.path.exists('config'):
+        return
+    else:
+        f = open("config", "r+") 
+        f.seek(0) 
+        f.truncate() 
 
 if __name__ == "__main__":
     app()
