@@ -51,7 +51,7 @@ def create(stations, db: Session):
         return None
     
 
-def get_specified_site_data_link(stations:str, start_date:str, end_date:str, db: Session):
+def get_specified_site_data_link(stations:str, start_date, end_date, db: Session):
 
     data_zip = db.query(StationsDataModel).filter(
         StationsDataModel.aquid == stations,

@@ -8,3 +8,4 @@ ML/site_to_parameter.csv
 ML/check.csv
 aircast.egg-info
 *.pkl
+backend/data.csv
