@@ -7,7 +7,7 @@ from datetime import datetime
 
 
 base_url ='http://localhost:8000'
-app = typer.Typer()
+app = typer.Typer(help="Awesome CLI user manager.")
 
 
 @app.command()
