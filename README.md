@@ -5,19 +5,23 @@ This is a complete system ensuring user to get access to Air Quality Prediction.
 
 ### Live Application Links:
 
-CodeLabs: https://codelabs-preview.appspot.com/?file_id=16Ka_g7q11hxCaiDtUhf8-CdDosMPoCXQ0UdtEbx7SA0#1
+** CodeLabs & Reports: ** https://codelabs-preview.appspot.com/?file_id=16Ka_g7q11hxCaiDtUhf8-CdDosMPoCXQ0UdtEbx7SA0#1
 
-Reports: 
+** Application Link: **
 
-CLI: 
+** Airflow: ** http://ec2-44-202-229-216.compute-1.amazonaws.com:8080/
 
-Application Link:
+### Arch Diagram
+
+<img src = 'https://github.com/BigDataIA-Spring2023-Team-05/Aircast/blob/main/ArchDiag.png' />
 
 
 ### Installation:
 1. Clone the repository (https://github.com/BigDataIA-Spring2023-Team-05/Aircast.git)
 
 2. Create the .env file inside the main folder. Follow the Aircast Github repository to sample_env.env file for the complete list of variables that need to be added in it.
+
+3. Install the packages listed in requirements.txt 
 
 
 ### Pre-requisites to execute this project
@@ -29,6 +33,9 @@ Application Link:
 3.AWS access and secret keys
 
 4.OpenAI (Chat GPT) API key
+
+### CLI:
+There is a CLI (Command-Line-Interface) in order to provide user the access to the data via AWS S3 bucket.
 
 ## Team Information and Contribution 
 
