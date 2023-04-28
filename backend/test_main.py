@@ -77,29 +77,97 @@ import json
 
 client = TestClient(app)
 
+@pytest.fixture(scope="module")
+def client():
+    with TestClient(app) as c:
+      yield c
+
 # register user router
 app.include_router(user.router)
 app.include_router(service_plans.router)
 app.include_router(admin.router)
 
-def test_funct():
+@pytest.fixture(scope="module")
+def test_user():
+    return {"username": "admin", "password": "spring2023"}
+
+#1
+def test_funct(client):
     response = client.get('/')
     assert response.status_code == 200   
 
-def test_admin_all_users():
+#2
+def test_login(client, test_user):
+  response = client.post("/user/login", data=test_user)
+  assert response.status_code == 200
+  token = response.json()["access_token"]
+  assert token is not None
+  return token
+
+#4
+def test_get_list(client, test_user):
+  token = test_login(client, test_user)
+  response = client.get("/admin/api-hits-previous-days", headers={"Authorization": f"Bearer {token}"})
+  assert response.status_code == 200
+  assert response.json()["success"] == True
+
+#5
+def test_admin_all_users(client):
     response = client.get("/admin/all-users")
     assert response.status_code == 200
     # print(response.text)
     json_object = json.loads(response.text)
     # print(json_object["users"])
     assert json_object["success"] == True
-    assert len(json_object["users"]) == 4
+    # assert len(json_object["users"]) == 4 Testing this  might fail as the users can get created
 
+#3
+def test_admin_all_apis_hits_with_count(client, test_user):
+    token = test_login(client, test_user)
+    response = client.get('/admin/all-apis-hits-with-count', headers={"Authorization": f"Bearer {token}"})
+    assert response.status_code == 200
+    json_object = json.loads(response.text)
+    assert json_object["success"] == True
+    print("json_object['/admin/api-sitenames-nearest'] ",json_object['/admin/api-sitenames-nearest'])
 
-def test_admin_api_sitenames_nearest():
-    response = client.get("/admin/api-sitenames-nearest")
+#6
+def test_api_hits_count_user_admin(client, test_user):
+    token = test_login(client, test_user)
+    response = client.get("/admin/api-hits-count/user/admin?date_request=04%2F26%2F2023", headers={"Authorization": f"Bearer {token}"})
+    assert response.status_code == 200
+    json_object = json.loads(response.text)
+    assert json_object["success"] == True
+    assert len(json_object["api_req"]) == 24
+
+#7
+def test_admin_api_sitenames_nearest(client):
+    response = client.get("/admin/api-sitenames-nearest?zipcode=02130")
     assert response.status_code == 200
     json_object = json.loads(response.text)
     print(json_object)
-    # assert json_object["stations"][0]['pollutant'] == ["NO2","CO","PM2.5","PM10","SO2","OZONE"]
+    assert json_object["stations"][0]['pollutant'] == ["NO2","CO","PM2.5","PM10","SO2","OZONE"]
+
+
+#8
+def test_admin_api_hits_previous_days(client, test_user):
+    token = test_login(client, test_user)
+    response = client.get('/admin/api-hits-previous-days', headers={"Authorization": f"Bearer {token}"})
+    assert response.status_code == 200
+    json_object = json.loads(response.text)
+    print(json_object['total_api_hits_in_previous_day'])
+    print(json_object['total_successful_api_hits_in_previous_day'])
+    print(json_object['total_failed_api_hits_in_previous_day'])
+
+#9
+def test_admin_api_hits_previous_week(client, test_user):
+    token = test_login(client, test_user)
+    response = client.get('/admin/all-apis-hits-with-count-last-week', headers={"Authorization": f"Bearer {token}"})
+    assert response.status_code == 200
+
+
+#9
+def test_admin_api_hits_compare_success_and_failure(client, test_user):
+    token = test_login(client, test_user)
+    response = client.get('/admin/all-apis-hits-with-count-compare-success-failure', headers={"Authorization": f"Bearer {token}"})
+    assert response.status_code == 200
 
