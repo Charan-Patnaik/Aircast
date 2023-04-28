@@ -19,7 +19,7 @@ router = APIRouter(
 
 get_db = db.get_db
 
-@router.get('/api-sitenames-nearest')
+@router.get('/prediction-for-zipcode')
 def get_user_sitenames_nearest(zipcode: str, get_current_user: TokenData = Depends(get_current_user), is_limit: bool = Depends(get_user_specific_api_rate_limit), db: Session = Depends(db.get_db)):
     # sql extract data
     if is_limit is True:
@@ -34,3 +34,7 @@ def get_user_sitenames_nearest(zipcode: str, get_current_user: TokenData = Depen
                     "message": "API limit excceded!"
                 }
             )
+    
+
+# @router.get('/get-data-by-site')
+# def get_
