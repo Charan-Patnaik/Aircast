@@ -36,7 +36,6 @@ jobs:
         env:
          AWS_ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY }}
          AWS_ACCESS_KEY_SECRET: ${{ secrets.AWS_ACCESS_KEY_SECRET }}
-         TARGET_BUCKET_NAME: ${{ secrets.TARGET_BUCKET_NAME }}
          ALGORITHM: ${{ secrets.ALGORITHM }}
          ACCESS_TOKEN_EXPIRE_MINUTES: ${{ secrets.ACCESS_TOKEN_EXPIRE_MINUTES }}
          SECRET_KEY: ${{ secrets.SECRET_KEY }}
