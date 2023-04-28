@@ -44,7 +44,7 @@ def verify_token(token:str, credentials_exception):
     
 
 
-def verify_token_v2(token:str) -> TokenData|None:
+def verify_token_v2(token:str) -> TokenData:
     try:
         # Decode the JWT token with the secret key and algorithm from environment variables
         payload = jwt.decode(token,  os.environ.get('SECRET_KEY'), algorithms=os.environ.get('ALGORITHM'))
