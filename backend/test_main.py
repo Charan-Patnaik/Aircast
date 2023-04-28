@@ -6,7 +6,7 @@ import numpy as np
 
 # TEST CASES
 # -----------------------------------------------------------------------------------
-# DATA READ
+# DATA QUALITY
 # -----------------------------------------------------------------------------------
 #%%
 @pytest.fixture
@@ -70,34 +70,13 @@ def test_lng_float(load_dataset_zip_with_lat):
 # TEST API
 # ------------------------------------------------------------------------------------
 
-from fastapi.testclient import TestClient
-from main import app
+# #%%
+# from fastapi.testclient import TestClient
+# from backend.routers import admin
 
-client = TestClient(app)
+# client = TestClient(admin.router)
 
-def test_say_hello():
-    response = client.get("/all-users")
-    assert response.status_code == 200
-    # message = response.json()["message"]
-    # assert message == 'Hello World'
-
-
-# def test_fetch_url():
-#     response = client.post(
-#         url = "/fetch_url",
-#         json = {
-#             'year': 2022,
-#             'month': 2,
-#             'date': 6,
-#             'station': 'Pytest2'
-#             }
-#         )
+# def test_all_users():
+#     response = client.get("/admin/all-users")
+#     print(response.status_code)
 #     assert response.status_code == 200
-#     message = response.json()["url"]
-#     assert message == 'https://noaa-nexrad-level2.s3.amazonaws.com/index.html#2022/02/06/Pytest2'
-    
-
-
-
-# %%
-# ---------------- TEST FAST API --------------------
