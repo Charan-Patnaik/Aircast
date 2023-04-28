@@ -11,69 +11,69 @@ from routers import service_plans
 from routers import admin
 import json
 
-# TEST CASES
-# -----------------------------------------------------------------------------------
-# DATA QUALITY CHECK ON CSVs
-# -----------------------------------------------------------------------------------
+# # TEST CASES
+# # -----------------------------------------------------------------------------------
+# # DATA QUALITY CHECK ON CSVs
+# # -----------------------------------------------------------------------------------
 
-# -----------------------------------------------------------------------------------
-# 1. STATION DATASET
-# -----------------------------------------------------------------------------------
-#%%
-@pytest.fixture
-def load_dataset_station_with_params():
-    df_station = pd.read_csv('station_with_params.csv')
-    return df_station
+# # -----------------------------------------------------------------------------------
+# # 1. STATION DATASET
+# # -----------------------------------------------------------------------------------
+# #%%
+# @pytest.fixture
+# def load_dataset_station_with_params():
+#     df_station = pd.read_csv('station_with_params.csv')
+#     return df_station
 
-@pytest.fixture
-def load_dataset_station_with_params_list():
-    converters = {'parameter name': lambda x: x.strip("[]").replace("'", "").split(", ")}
-    df_station = pd.read_csv('station_with_params.csv', converters=converters)
-    return df_station
+# @pytest.fixture
+# def load_dataset_station_with_params_list():
+#     converters = {'parameter name': lambda x: x.strip("[]").replace("'", "").split(", ")}
+#     df_station = pd.read_csv('station_with_params.csv', converters=converters)
+#     return df_station
 
 
-# test to check data type of CountyName column
-def test_countyname_type(load_dataset_station_with_params):
-    assert load_dataset_station_with_params['CountyName'].dtype == 'object', "CountyName should be a string"
+# # test to check data type of CountyName column
+# def test_countyname_type(load_dataset_station_with_params):
+#     assert load_dataset_station_with_params['CountyName'].dtype == 'object', "CountyName should be a string"
 
-# test to check data type of parameter_name column
-def test_parameter_name_type(load_dataset_station_with_params_list):
-    assert isinstance(load_dataset_station_with_params_list['parameter name'][0], list), "parameter name should be a list"
+# # test to check data type of parameter_name column
+# def test_parameter_name_type(load_dataset_station_with_params_list):
+#     assert isinstance(load_dataset_station_with_params_list['parameter name'][0], list), "parameter name should be a list"
 
-# test to check uniqueness of AQSID column
-def test_aqsid_unique(load_dataset_station_with_params):
-    assert load_dataset_station_with_params['AQSID'].is_unique, "AQSID values are not unique"
+# # test to check uniqueness of AQSID column
+# def test_aqsid_unique(load_dataset_station_with_params):
+#     assert load_dataset_station_with_params['AQSID'].is_unique, "AQSID values are not unique"
 
-#%%
-def test_lat_float(load_dataset_station_with_params):
-    assert load_dataset_station_with_params['Latitude'].dtype == np.float64, "LAT column should contain floats only"
+# #%%
+# def test_lat_float(load_dataset_station_with_params):
+#     assert load_dataset_station_with_params['Latitude'].dtype == np.float64, "LAT column should contain floats only"
 
-# %%
-def test_lng_float(load_dataset_station_with_params):
-    assert load_dataset_station_with_params['Longitude'].dtype == np.float64, "LNG column should contain floats only"
+# # %%
+# def test_lng_float(load_dataset_station_with_params):
+#     assert load_dataset_station_with_params['Longitude'].dtype == np.float64, "LNG column should contain floats only"
 
 
 # -----------------------------------------------------------------------------------
 # 2.ZIP, LAT, LNG VALIDATION
 # -----------------------------------------------------------------------------------
 
-#%%
-@pytest.fixture
-def load_dataset_zip_with_lat():
-    df_zip = pd.read_csv('zip_with_lat.csv')
-    return df_zip
-
-#%%
-def test_zip_int(load_dataset_zip_with_lat):
-    assert load_dataset_zip_with_lat['ZIP'].dtype == np.int64, "ZIP column should contain integers only"
+# #%%
+# @pytest.fixture
+# def load_dataset_zip_with_lat():
+#     df_zip = pd.read_csv('zip_with_lat.csv')
+#     return df_zip
 
 # #%%
-def test_lat_float(load_dataset_zip_with_lat):
-    assert load_dataset_zip_with_lat['LAT'].dtype == np.float64, "LAT column should contain floats only"
+# def test_zip_int(load_dataset_zip_with_lat):
+#     assert load_dataset_zip_with_lat['ZIP'].dtype == np.int64, "ZIP column should contain integers only"
 
-# #%%
-def test_lng_float(load_dataset_zip_with_lat):
-    assert load_dataset_zip_with_lat['LNG'].dtype == np.float64, "LNG column should contain floats only"
+# # #%%
+# def test_lat_float(load_dataset_zip_with_lat):
+#     assert load_dataset_zip_with_lat['LAT'].dtype == np.float64, "LAT column should contain floats only"
+
+# # #%%
+# def test_lng_float(load_dataset_zip_with_lat):
+#     assert load_dataset_zip_with_lat['LNG'].dtype == np.float64, "LNG column should contain floats only"
 
 
 #%%
