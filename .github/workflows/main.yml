@@ -68,13 +68,13 @@ jobs:
           key: ${{ secrets.AWS_PRIVATE_KEY }}
           script: |
               sudo su
-              cd /home/ubuntu/Aircast
+              cd Aircast
               git checkout main
               git fetch --all
               git reset --hard origin/main
               git pull origin main
               sudo systemctl start docker
-              sudo docker-compose down --volumes --rmi all
-              sudo docker-compose build --no-cache
-              sudo docker-compose up -d
+              sudo docker compose down --volumes --rmi all
+              sudo docker compose build --no-cache
+              sudo docker compose up -d
           
