@@ -3,10 +3,21 @@ import pytest
 import re
 import pandas as pd
 import numpy as np
+from fastapi import FastAPI
+from fastapi.testclient import TestClient
+from .main import app
+from routers import user
+from routers import service_plans
+from routers import admin
+import json
 
 # TEST CASES
 # -----------------------------------------------------------------------------------
-# DATA READ
+# DATA QUALITY CHECK ON CSVs
+# -----------------------------------------------------------------------------------
+
+# -----------------------------------------------------------------------------------
+# 1. STATION DATASET
 # -----------------------------------------------------------------------------------
 #%%
 @pytest.fixture
@@ -41,8 +52,9 @@ def test_lat_float(load_dataset_station_with_params):
 def test_lng_float(load_dataset_station_with_params):
     assert load_dataset_station_with_params['Longitude'].dtype == np.float64, "LNG column should contain floats only"
 
+
 # -----------------------------------------------------------------------------------
-# ZIP, LAT, LNG VALIDATION
+# 2.ZIP, LAT, LNG VALIDATION
 # -----------------------------------------------------------------------------------
 
 #%%
@@ -50,9 +62,7 @@ def test_lng_float(load_dataset_station_with_params):
 def load_dataset_zip_with_lat():
     df_zip = pd.read_csv('zip_with_lat.csv')
     return df_zip
-# -----------------------------------------------------------------------------------
-# data quality checks 
-# -----------------------------------------------------------------------------------
+
 #%%
 def test_zip_int(load_dataset_zip_with_lat):
     assert load_dataset_zip_with_lat['ZIP'].dtype == np.int64, "ZIP column should contain integers only"
@@ -67,13 +77,11 @@ def test_lng_float(load_dataset_zip_with_lat):
 
 
 #%%
-from fastapi import FastAPI
-from fastapi.testclient import TestClient
-from .main import app
-from routers import user
-from routers import service_plans
-from routers import admin
-import json
+
+# -----------------------------------------------------------------------------------
+# 3. FASTAPI TESTING
+# -----------------------------------------------------------------------------------
+
 
 client = TestClient(app)
 
@@ -104,14 +112,8 @@ def test_login(client, test_user):
   assert token is not None
   return token
 
-#4
-def test_get_list(client, test_user):
-  token = test_login(client, test_user)
-  response = client.get("/admin/api-hits-previous-days", headers={"Authorization": f"Bearer {token}"})
-  assert response.status_code == 200
-  assert response.json()["success"] == True
 
-#5
+#3
 def test_admin_all_users(client):
     response = client.get("/admin/all-users")
     assert response.status_code == 200
@@ -121,16 +123,7 @@ def test_admin_all_users(client):
     assert json_object["success"] == True
     # assert len(json_object["users"]) == 4 Testing this  might fail as the users can get created
 
-#3
-def test_admin_all_apis_hits_with_count(client, test_user):
-    token = test_login(client, test_user)
-    response = client.get('/admin/all-apis-hits-with-count', headers={"Authorization": f"Bearer {token}"})
-    assert response.status_code == 200
-    json_object = json.loads(response.text)
-    assert json_object["success"] == True
-    print("json_object['/admin/api-sitenames-nearest'] ",json_object['/admin/api-sitenames-nearest'])
-
-#6
+#4
 def test_api_hits_count_user_admin(client, test_user):
     token = test_login(client, test_user)
     response = client.get("/admin/api-hits-count/user/admin?date_request=04%2F26%2F2023", headers={"Authorization": f"Bearer {token}"})
@@ -139,7 +132,7 @@ def test_api_hits_count_user_admin(client, test_user):
     assert json_object["success"] == True
     assert len(json_object["api_req"]) == 24
 
-#7
+#5
 def test_admin_api_sitenames_nearest(client):
     response = client.get("/admin/api-sitenames-nearest?zipcode=02130")
     assert response.status_code == 200
@@ -147,8 +140,17 @@ def test_admin_api_sitenames_nearest(client):
     print(json_object)
     assert json_object["stations"][0]['pollutant'] == ["NO2","CO","PM2.5","PM10","SO2","OZONE"]
 
+#6
+def test_admin_all_apis_hits_with_count(client, test_user):
+    token = test_login(client, test_user)
+    response = client.get('/admin/all-apis-hits-with-count', headers={"Authorization": f"Bearer {token}"})
+    assert response.status_code == 200
+    json_object = json.loads(response.text)
+    assert json_object["success"] == True
+    print("json_object['/admin/api-sitenames-nearest'] ",json_object['/admin/api-sitenames-nearest'])
 
-#8
+
+#7
 def test_admin_api_hits_previous_days(client, test_user):
     token = test_login(client, test_user)
     response = client.get('/admin/api-hits-previous-days', headers={"Authorization": f"Bearer {token}"})
@@ -158,12 +160,11 @@ def test_admin_api_hits_previous_days(client, test_user):
     print(json_object['total_successful_api_hits_in_previous_day'])
     print(json_object['total_failed_api_hits_in_previous_day'])
 
-#9
+#8
 def test_admin_api_hits_previous_week(client, test_user):
     token = test_login(client, test_user)
     response = client.get('/admin/all-apis-hits-with-count-last-week', headers={"Authorization": f"Bearer {token}"})
     assert response.status_code == 200
-
 
 #9
 def test_admin_api_hits_compare_success_and_failure(client, test_user):
