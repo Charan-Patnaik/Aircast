@@ -39,9 +39,11 @@ jobs:
          ALGORITHM: ${{ secrets.ALGORITHM }}
          ACCESS_TOKEN_EXPIRE_MINUTES: ${{ secrets.ACCESS_TOKEN_EXPIRE_MINUTES }}
          SECRET_KEY: ${{ secrets.SECRET_KEY }}
+         DB_HOST: ${{DB_HOST}}
+         DB_USER: ${{DB_USER}}
+         DB_PASSWORD: ${{DB_PASSWORD}}
+         DB_NAME: ${{DB_NAME}}
         run: | 
-          cd ./backend/
-          pip install -e .
           pytest
           
   deploy:

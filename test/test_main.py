@@ -5,6 +5,10 @@ import pandas as pd
 import numpy as np
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
+
+import sys
+sys.path.append('./backend/')
+
 from main import app
 from routers import user
 from routers import service_plans
@@ -22,13 +26,13 @@ import json
 #%%
 @pytest.fixture
 def load_dataset_station_with_params():
-    df_station = pd.read_csv('station_with_params.csv')
+    df_station = pd.read_csv('./backend/station_with_params.csv')
     return df_station
 
 @pytest.fixture
 def load_dataset_station_with_params_list():
     converters = {'parameter name': lambda x: x.strip("[]").replace("'", "").split(", ")}
-    df_station = pd.read_csv('station_with_params.csv', converters=converters)
+    df_station = pd.read_csv('./backend/station_with_params.csv', converters=converters)
     return df_station
 
 
@@ -60,7 +64,7 @@ def test_lng_float(load_dataset_station_with_params):
 #%%
 @pytest.fixture
 def load_dataset_zip_with_lat():
-    df_zip = pd.read_csv('zip_with_lat.csv')
+    df_zip = pd.read_csv('./backend/zip_with_lat.csv')
     return df_zip
 
 #%%
