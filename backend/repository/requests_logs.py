@@ -15,6 +15,7 @@ from config import db
 from datetime import datetime, timedelta, date
 from sqlalchemy import and_, or_, Date, cast, distinct, tuple_
 from sqlalchemy.sql import func
+from utils.redis import islimiter
 
 
 def create(request_endpoint: str, request_status: int,  db: Session, token:str):
@@ -79,7 +80,7 @@ def get_user_specific_api_rate_limit(request:Request, db: Session = Depends(db.g
 
     try:
         if request.headers.get('Authorization') is not None:
-            tokenData = verify_token_v2(request.headers['Authorization'].split(" ")[1])
+            tokenData: TokenData = verify_token_v2(request.headers['Authorization'].split(" ")[1])
             print(tokenData)
             if tokenData is None:
                 return None

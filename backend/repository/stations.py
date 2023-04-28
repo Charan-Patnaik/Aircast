@@ -7,9 +7,12 @@ import ast
 import json
 from models.Stations import StationsModel
 from models.Zipcode import ZipcodeModel
+from models.ZipDataDailyCache import ZipDataDailyCacheModel
 
 import requests
 import os
+
+from models.ZipDataDailyCache import ZipDataDailyCacheModel
 
 from dotenv import load_dotenv
 
@@ -49,6 +52,29 @@ def get_zipcode_using_lat_long(zipcode, db: Session):
 
 
 def get_all_nearest_sitenames(zipcode, db: Session):
+    data_zip = db.query(ZipDataDailyCacheModel).filter(ZipDataDailyCacheModel.zipcode == zipcode).all()
+
+    if len(data_zip) > 0:
+        print("data from db directly", data_zip)
+
+        new_list = []
+        for dat in data_zip:
+
+            new_list.append({
+                "SO2": dat.so2,
+                "OZONE": dat.ozone,
+                "CO": dat.co,
+                "NO2": dat.no2,
+                "PM2.5": dat.pm2_5,
+                "PM10": dat.pm10
+            })
+        
+        return {
+            "success": True,
+            "stations": new_list
+        }
+
+
     l = []
     
     lat, lng = get_zipcode_using_lat_long(zipcode, db)
@@ -164,30 +190,71 @@ def get_all_nearest_sitenames(zipcode, db: Session):
     list_of_list = []
     for stations_name, station_parameters in result.items():
         new_list = []
+        print("**** api_hit_stations: ", stations_name, " Params: ", station_parameters)
 
         response = requests.post( f"{BASE_URL_FOR_MAAS}/get-prediction-for-station-id/{stations_name}", headers={"accept": "application/json"})
         if(response.status_code == 200):
             predictions_list = response.json()['predictions']
 
+            # print("*** Predictions: \n", predictions_list)
             # new_list = []
-            new_item = {}
             # for i in station_parameters:
             for item in predictions_list:
+                new_item = {}
+
                     # ozone = item['OZONE']
                     # so2 = item['SO2']
                     # no2 = item['NO2']
                     # pm25 = item['PM2.5']
                     # new_item = {i: item[f'{i}']}
+                # new_item['timestamp'] = item[f'index']
                 for i in station_parameters:
                     new_item[i] = item[f'{i}']
         
                 new_list.append(new_item)
         
+        print(new_list)
         list_of_list.append(new_list)
 
-    print(list_of_list)
+    # print(list_of_list)
 
-    combined_list = [dict1.update(dict2) or dict1 for dict1, dict2 in zip(*list_of_list)]
+    # combined_list = []
+    # combined_dict = {}
+    # for sub_list in list_of_list:
+        
+    #     combined_dict = {}
+
+    #     for d in sub_list:
+    #         combined_dict.update(d)
+    #     combined_list.append(combined_dict)
+
+
+    
+    combined_list = []
+    for dicts in zip(*list_of_list):
+        combined_dict = {}
+        for d in dicts:
+            combined_dict.update(d)
+        combined_list.append(combined_dict)
+    
+    # combined_list = [dict1.update(dict2) or dict1 for dict1, dict2 in zip(*list_of_list)]
+
+    rows = []
+
+    for i in combined_list:
+        rows.append(ZipDataDailyCacheModel(
+            zipcode=str(zipcode),
+            so2=i['SO2'],
+            ozone=i['OZONE'],
+            co=i['CO'],
+            no2 = i['NO2'],
+            pm2_5 = i['PM2.5'],
+            pm10 = i['PM10'],
+        ))
+
+    db.bulk_save_objects(rows)
+    db.commit()
+    db.close()
 
     return {
         "success": True,
