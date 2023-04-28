@@ -5,7 +5,7 @@ import pandas as pd
 import numpy as np
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
-from .main import app
+from main import app
 from routers import user
 from routers import service_plans
 from routers import admin
