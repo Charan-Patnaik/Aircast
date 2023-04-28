@@ -36,6 +36,12 @@ jobs:
         env:
          AWS_ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY }}
          AWS_ACCESS_KEY_SECRET: ${{ secrets.AWS_ACCESS_KEY_SECRET }}
+         AWS_REGION_NAME: ${{ secrets.AWS_REGION_NAME }}
+         AWS_LOG_GROUP_NAME: ${{ secrets.AWS_LOG_GROUP_NAME }}
+         AWS_LOG_USER_SIGNUP: ${{ secrets.AWS_LOG_USER_SIGNUP }}
+         AWS_LOG_USER_LOGIN: ${{ secrets.AWS_LOG_USER_LOGIN }}
+         AWS_BUCKET_NAME: ${{ secrets.AWS_BUCKET_NAME }}
+         BASE_URL_PREDICITON: ${{ secrets.BASE_URL_PREDICITON }}
          ALGORITHM: ${{ secrets.ALGORITHM }}
          ACCESS_TOKEN_EXPIRE_MINUTES: ${{ secrets.ACCESS_TOKEN_EXPIRE_MINUTES }}
          SECRET_KEY: ${{ secrets.SECRET_KEY }}
