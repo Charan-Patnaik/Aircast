@@ -81,10 +81,6 @@ if st.session_state["authentication_status"] == False:
             log_token = x['access_token']
             # st.session_state["user_status"] = x['userType']
             
-            # print("********* login ********")
-            # print(log_username)
-            # print(log_token)
-            # print("********* login ********")
         # Initialization of session state:
         
             st.session_state["authentication_status"] = log_token
