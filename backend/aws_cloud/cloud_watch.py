@@ -12,7 +12,7 @@ clientlogs = boto3.client(
                         'logs', 
                         region_name=os.environ.get('AWS_REGION_NAME'),
                         aws_access_key_id=os.environ.get('AWS_ACCESS_KEY'),
-                        aws_secret_access_key=os.environ.get('AWS_SECRET_KEY')
+                        aws_secret_access_key=os.environ.get('AWS_ACCESS_KEY_SECRET')
                         )
 
 

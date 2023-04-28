@@ -16,6 +16,13 @@ from models.ZipDataDailyCache import ZipDataDailyCacheModel
 
 from dotenv import load_dotenv
 
+from sqlalchemy import and_
+
+import csv
+
+from aws_cloud.s3_upload import file_upload
+
+
 load_dotenv()
 
 BASE_URL_FOR_MAAS = os.environ.get('BASE_URL_PREDICITON')
@@ -43,6 +50,37 @@ def create(stations, db: Session):
         print(e)
         return None
     
+
+def get_specified_site_data_link(stations:str, start_date:str, end_date:str, db: Session):
+
+    data_zip = db.query(StationsDataModel).filter(
+        StationsDataModel.aquid == stations,
+        and_(StationsDataModel.collection_timestamp >= start_date, StationsDataModel.collection_timestamp <= end_date)
+    ).all()
+
+        # Convert data_zip to a list of dictionaries
+    data_list = [record.__dict__ for record in data_zip]
+
+    # Remove unnecessary keys from each dictionary
+    for record in data_list:
+        record.pop('_sa_instance_state', None)
+
+    # Write data_list to a CSV file
+    with open('data.csv', 'w', newline='') as csvfile:
+        writer = csv.DictWriter(csvfile, fieldnames=data_list[0].keys())
+        writer.writeheader()
+        writer.writerows(data_list)
+
+    
+    url_file = file_upload('data.csv')
+
+    return {
+            "success": True,
+            "file_url": url_file
+        }
+
+
+
 
 def get_zipcode_using_lat_long(zipcode, db: Session):
 

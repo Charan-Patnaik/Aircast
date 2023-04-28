@@ -28,7 +28,7 @@ def create(request: User, db: Session):
             return response.conflict(f"User with the email '{request.email}' or username '{request.username}' already exists!")
 
 
-        new_user = UserModel(username=request.username, email=request.email, password= hashing.Hash().get_hashed_password(request.password), planId = request.planId, apiKey = str(uuid.uuid4()), userType = 2)
+        new_user = UserModel(username=request.username, email=request.email, password= hashing.Hash().get_hashed_password(request.password), planId = request.planId, apiKey = str(uuid.uuid4()), userType = Role.User)
         db.add(new_user)
         db.commit()
         db.refresh(new_user)

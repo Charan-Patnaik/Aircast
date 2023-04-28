@@ -1,7 +1,7 @@
 from fastapi import APIRouter, status, HTTPException, Response, Depends
 from config import db
 from sqlalchemy.orm import Session
-from repository.stations import get_all_nearest_sitenames
+from repository.stations import get_all_nearest_sitenames, get_specified_site_data_link
 # from repository.user import find_user_api_key
 from datetime import datetime
 from schemas.User import TokenData
@@ -36,5 +36,17 @@ def get_user_sitenames_nearest(zipcode: str, get_current_user: TokenData = Depen
             )
     
 
-# @router.get('/get-data-by-site')
-# def get_
+@router.get('/get-data-by-site')
+def get_data_for_site(station_name: str, start_date:str, end_date:str, get_current_user: TokenData = Depends(get_current_user), is_limit: bool = Depends(get_user_specific_api_rate_limit), db: Session = Depends(db.get_db)):
+    if is_limit is True:
+        station_list = get_specified_site_data_link(stations= station_name, start_date= start_date, end_date= end_date, db=db)
+        return station_list
+    
+    else:
+        return JSONResponse(
+                status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+                content={
+                    'success': False, 
+                    "message": "API limit excceded!"
+                }
+            )
