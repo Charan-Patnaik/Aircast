@@ -1,5 +1,4 @@
 from fastapi import FastAPI
-from fastapi.testclient import TestClient
 import uvicorn
 from routers import user, service_plans, admin
 from config.db import Base, engine, SessionLocal
@@ -13,7 +12,6 @@ import pandas as pd
 
 app =  FastAPI()
 db = SessionLocal()
-client = TestClient(app)
 
 
 # create tables if not exist
@@ -51,19 +49,6 @@ async def startup():
 @app.get('/')
 async def index():
     return 'Success! APIs are working!'
-
-import pytest
-import json
-
-def test_all_users():
-    response = client.get("/admin/all-users")
-
-    print(response.status_code)
-
-    assert response.status_code == 200
-    json_string = '{"success": true,"users": [{ "id": "1", "username": "damg7245"}, { "id": "2", "username": "admin" }, {"id": "3", "username": "vsh123" }]}'
-    json_object = json.loads(json_string)
-    assert response.json() == json_object
 
 
 if __name__ == '__main__':

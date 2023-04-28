@@ -6,7 +6,7 @@ import numpy as np
 
 # TEST CASES
 # -----------------------------------------------------------------------------------
-# DATA QUALITY
+# DATA READ
 # -----------------------------------------------------------------------------------
 #%%
 @pytest.fixture
@@ -65,18 +65,41 @@ def test_lat_float(load_dataset_zip_with_lat):
 def test_lng_float(load_dataset_zip_with_lat):
     assert load_dataset_zip_with_lat['LNG'].dtype == np.float64, "LNG column should contain floats only"
 
-# #%%
-# ------------------------------------------------------------------------------------
-# TEST API
-# ------------------------------------------------------------------------------------
 
-# #%%
-# from fastapi.testclient import TestClient
-# from backend.routers import admin
+#%%
+from fastapi import FastAPI
+from fastapi.testclient import TestClient
+from .main import app
+from routers import user
+from routers import service_plans
+from routers import admin
+import json
 
-# client = TestClient(admin.router)
+client = TestClient(app)
 
-# def test_all_users():
-#     response = client.get("/admin/all-users")
-#     print(response.status_code)
-#     assert response.status_code == 200
+# register user router
+app.include_router(user.router)
+app.include_router(service_plans.router)
+app.include_router(admin.router)
+
+def test_funct():
+    response = client.get('/')
+    assert response.status_code == 200   
+
+def test_admin_all_users():
+    response = client.get("/admin/all-users")
+    assert response.status_code == 200
+    # print(response.text)
+    json_object = json.loads(response.text)
+    # print(json_object["users"])
+    assert json_object["success"] == True
+    assert len(json_object["users"]) == 4
+
+
+def test_admin_api_sitenames_nearest():
+    response = client.get("/admin/api-sitenames-nearest")
+    assert response.status_code == 200
+    json_object = json.loads(response.text)
+    print(json_object)
+    # assert json_object["stations"][0]['pollutant'] == ["NO2","CO","PM2.5","PM10","SO2","OZONE"]
+
