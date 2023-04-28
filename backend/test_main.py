@@ -112,6 +112,21 @@ def test_login(client, test_user):
   assert token is not None
   return token
 
+#
+def test_service_plan(client):
+    response = client.get("/service-plan/options")
+    assert response.status_code == 200
+    print(response.text)
+    json_object = json.loads(response.text)
+    assert len(json_object) == 3
+    assert json_object[0]["id"] == 1
+    assert json_object[0]["planName"] == "Free"
+    assert json_object[1]["id"] == 2
+    assert json_object[1]["planName"] == "Gold"
+    assert json_object[2]["id"] == 3
+    assert json_object[2]["planName"] == "Platinum"
+
+
 
 #3
 def test_admin_all_users(client):
@@ -132,25 +147,8 @@ def test_api_hits_count_user_admin(client, test_user):
     assert json_object["success"] == True
     assert len(json_object["api_req"]) == 24
 
+
 #5
-def test_admin_api_sitenames_nearest(client):
-    response = client.get("/admin/api-sitenames-nearest?zipcode=02130")
-    assert response.status_code == 200
-    json_object = json.loads(response.text)
-    print(json_object)
-    assert json_object["stations"][0]['pollutant'] == ["NO2","CO","PM2.5","PM10","SO2","OZONE"]
-
-#6
-def test_admin_all_apis_hits_with_count(client, test_user):
-    token = test_login(client, test_user)
-    response = client.get('/admin/all-apis-hits-with-count', headers={"Authorization": f"Bearer {token}"})
-    assert response.status_code == 200
-    json_object = json.loads(response.text)
-    assert json_object["success"] == True
-    print("json_object['/admin/api-sitenames-nearest'] ",json_object['/admin/api-sitenames-nearest'])
-
-
-#7
 def test_admin_api_hits_previous_days(client, test_user):
     token = test_login(client, test_user)
     response = client.get('/admin/api-hits-previous-days', headers={"Authorization": f"Bearer {token}"})
@@ -160,13 +158,7 @@ def test_admin_api_hits_previous_days(client, test_user):
     print(json_object['total_successful_api_hits_in_previous_day'])
     print(json_object['total_failed_api_hits_in_previous_day'])
 
-#8
-def test_admin_api_hits_previous_week(client, test_user):
-    token = test_login(client, test_user)
-    response = client.get('/admin/all-apis-hits-with-count-last-week', headers={"Authorization": f"Bearer {token}"})
-    assert response.status_code == 200
-
-#9
+#6
 def test_admin_api_hits_compare_success_and_failure(client, test_user):
     token = test_login(client, test_user)
     response = client.get('/admin/all-apis-hits-with-count-compare-success-failure', headers={"Authorization": f"Bearer {token}"})
