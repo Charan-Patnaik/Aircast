@@ -40,6 +40,8 @@ jobs:
          ACCESS_TOKEN_EXPIRE_MINUTES: ${{ secrets.ACCESS_TOKEN_EXPIRE_MINUTES }}
          SECRET_KEY: ${{ secrets.SECRET_KEY }}
         run: | 
+          cd ./backend/
+          pip install -e .
           pytest
           
   deploy:

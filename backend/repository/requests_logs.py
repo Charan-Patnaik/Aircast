@@ -64,9 +64,11 @@ def get_user_api_request_data_by_hour_for_specific_date(date_requested: Date, us
                 }
             )
 
-    # print(result)
-
+    print("****************************")
+    print(result)
+    print("****************************")
     print(l)
+    print("****************************")
 
     return l
 
