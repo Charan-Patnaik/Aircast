@@ -30,8 +30,8 @@ my_list = ['350130022']
 
 session = boto3.Session(
     region_name='us-east-1',
-    aws_access_key_id='AKIAY5JK22NETTJWNQ46',
-    aws_secret_access_key='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')
+    aws_access_key_id='<some-key-value',
+    aws_secret_access_key='<some-email>')
 
 s3 = session.resource('s3')
 
